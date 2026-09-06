@@ -1,26 +1,86 @@
 
 /* ------------------------------------------------------- smooth scrolling */
-/* Lenis is pulled from a CDN, and only index.html loads it today. Guard on the
-   library actually being there: as a bare top-level `new Lenis(...)` this threw
-   on line 1 of every other page, which aborted the whole file and left the
-   preloader on screen forever. Wrapped in a function so nothing is declared at
-   top level either — a page that includes main.js twice re-runs this harmlessly
-   instead of dying on a duplicate `const`. */
+/* Lenis is self-hosted at js/lenis.min.js and loaded by every page, ahead of
+   this file. The guard stays regardless: as a bare top-level `new Lenis(...)`
+   this threw on line 1 of any page that did not have the library, which
+   aborted the whole file and left the preloader on screen forever — so a
+   failed request for it must stay survivable. Wrapped in a function so
+   nothing is declared at top level either — a page that includes main.js
+   twice re-runs this harmlessly instead of dying on a duplicate `const`. */
 (function initSmoothScroll() {
   'use strict';
   if (typeof window.Lenis !== 'function') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  /* Lenis has two scroll models and they feel completely different.
+
+       lerp                 damps continuously toward wherever the wheel has
+                            asked the page to be. Never quite arrives, so the
+                            page keeps drifting after the wheel stops.
+       duration + easing    runs a fixed tween per input. Both must be set —
+                            easing has no default, and with only `duration`
+                            Lenis silently falls back to the lerp model.
+
+     This used to carry `duration: 1.2` with no easing, which therefore did
+     nothing and left the stock lerp of 0.1 running; the fix at the time was to
+     drive lerp directly and slow it right down (0.04) with a reduced
+     wheelMultiplier. That is the floaty model: unhurried, but it trails.
+
+     These are the settings the reference site runs — a 1.15s expo-out tween at
+     the full, unscaled wheel distance. It tracks the input closely and then
+     settles, instead of gliding on after it. */
   var lenis = new window.Lenis({
-    duration: 1.2,
     smoothWheel: true,
-    smoothTouch: false
+    duration: 1.15,
+    easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }
   });
 
   (function raf(time) {
     lenis.raf(time);
     window.requestAnimationFrame(raf);
   })();
+
+  /* In-page links. Lenis needs `scroll-behavior: auto` to work (see the .lenis
+     rules in the stylesheet), which also means a plain #hash click lands with
+     an instant jump instead of easing. Hand those clicks to Lenis so the TOC
+     rail and the back-to-top button move the way the wheel does. */
+  function anchorOffset() {
+    /* mirror the CSS scroll-padding-top so links clear the sticky header —
+       one source of truth rather than a second hard-coded header height */
+    var pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop);
+    return isNaN(pad) ? 0 : pad;
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (!e.target || !e.target.closest) return;
+
+    var link = e.target.closest('a[href]');
+    if (!link || link.target === '_blank') return;
+
+    var href = link.getAttribute('href');
+    if (!href || href.charAt(0) !== '#' || href === '#') return;
+
+    var target;
+    try { target = document.querySelector(href); } catch (err) { return; }
+    if (!target) return;
+
+    e.preventDefault();
+    lenis.scrollTo(target, {
+      offset: -anchorOffset(),
+      onComplete: function () {
+        /* a real anchor jump moves focus to the target; scrollTo does not, and
+           the skip link is useless without it */
+        if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+        target.focus({ preventScroll: true });
+      }
+    });
+
+    if (window.history && window.history.pushState) {
+      window.history.pushState(null, '', href);
+    }
+  });
 })();
 
 
@@ -62,10 +122,21 @@
 
     var ticking = false;
     var shrunk = false;
+    var toTopShown = null;
+
+    /* Two thresholds, not one. With a single line at 20px the class flipped
+       every time the pointer drifted across it — and smooth scrolling glides
+       to a stop rather than stopping dead, so a scroll that settled near the
+       line restarted the half-second contraction over and over. The bar now
+       contracts once past 64px and only expands again back under 16px, so
+       nothing that happens in between can interrupt it mid-flight. */
+    var SHRINK_AT = 64;
+    var GROW_AT   = 16;
+
     function update() {
       var scrollY = window.scrollY || window.pageYOffset;
       if (header) {
-        var next = scrollY > 20;
+        var next = shrunk ? scrollY > GROW_AT : scrollY > SHRINK_AT;
         if (next !== shrunk) {
           shrunk = next;
           header.classList.toggle('is-scrolled', next);
@@ -81,8 +152,13 @@
       }
       if (toTop) {
         var show = scrollY > window.innerHeight * 0.9;
-        toTop.hidden = !show;
-        toTop.classList.toggle('is-visible', show);
+        // touching .hidden every frame is a style invalidation per frame for
+        // a value that changes twice a page
+        if (show !== toTopShown) {
+          toTopShown = show;
+          toTop.hidden = !show;
+          toTop.classList.toggle('is-visible', show);
+        }
       }
       ticking = false;
     }
@@ -160,87 +236,78 @@
       }
     }
 
-    /* ---- hover intent (desktop, real pointers only) ----
-       Pointing at an item opens it after a short beat, so brushing past the
-       bar on the way somewhere else never flashes a panel. Once one panel is
-       open, moving along the bar swaps instantly -- the curtain is already
-       down, so a second delay would just feel sticky. Leaving keeps the panel
-       up for a grace period, which is what lets the mouse cut a diagonal from
-       the link to the far side of the panel. */
-    var hoverPointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-    var HOVER_OPEN_DELAY  = 90;
-    var HOVER_CLOSE_DELAY = 220;
-    var hoverTimer = null;
+    /* ---- opening a flyout ----
+       On a real pointer the panel opens on hover. Two timers keep that from
+       being the twitchy thing hover menus usually are: a short dwell before
+       opening, so crossing the bar on the way somewhere else does not unfurl
+       a panel, and a grace period before closing, so a diagonal move from the
+       link down into the panel does not lose it on the way. The panel is a
+       child of the item, so travelling into it never leaves the item at all.
 
-    function hoverNav() { return desktopNav.matches && hoverPointer.matches; }
-    function clearHoverTimer() {
-      if (hoverTimer) { window.clearTimeout(hoverTimer); hoverTimer = null; }
+       Where there is no hover -- touch, or a pen -- click still toggles, and
+       Enter always toggles, so the keyboard never depends on a pointer.
+
+       With hover doing the opening, a mouse click on the toggle is free to do
+       what the link says: go to that section's landing page. */
+    var hoverNav   = window.matchMedia('(hover: hover) and (pointer: fine)');
+    var openTimer  = null;
+    var closeTimer = null;
+
+    function clearIntent() {
+      window.clearTimeout(openTimer);
+      window.clearTimeout(closeTimer);
+      openTimer = closeTimer = null;
     }
+
+    function hoverOpens() { return hoverNav.matches && desktopNav.matches; }
 
     items.forEach(function (item) {
       var toggle = $('.nav__toggle', item);
       if (!toggle) return;
+
       toggle.addEventListener('click', function (e) {
-        // Desktop pointer users get a real link: it goes to the section's
-        // landing page, and the menu is already there on hover / focus.
-        if (hoverNav()) return;
-        // Mobile sheet and no-hover devices: the link can't take you anywhere
-        // useful on its own, so it expands the submenu in place instead --
-        // that is the only route to the sub-pages here.
+        // a keyboard activation reports detail 0 — that one always toggles
+        if (hoverOpens() && e.detail !== 0) return;   // let the link navigate
         e.preventDefault();
-        clearHoverTimer();
         toggleItem(item);
       });
 
-      // Keyboard: focusing the link on desktop opens its menu, so the links
-      // inside can be tabbed to. Enter still follows the link.
-      toggle.addEventListener('focus', function () {
-        if (!hoverNav()) return;
-        clearHoverTimer();
-        if (!item.classList.contains('is-open')) toggleItem(item, true);
-      });
-
-      // the panel is a child of the item, so moving down into it never leaves
-      item.addEventListener('mouseenter', function () {
-        if (!hoverNav()) return;
-        clearHoverTimer();
+      item.addEventListener('pointerenter', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        if (!hoverOpens()) return;
+        clearIntent();
         if (item.classList.contains('is-open')) return;
-        var delay = openItem() ? 0 : HOVER_OPEN_DELAY;
-        if (!delay) { toggleItem(item, true); return; }
-        hoverTimer = window.setTimeout(function () {
-          hoverTimer = null;
+        // no dwell when a panel is already open — moving along the bar should
+        // switch panels immediately, not stutter at each one
+        openTimer = window.setTimeout(function () {
           toggleItem(item, true);
-        }, delay);
+        }, openItem() ? 0 : 110);
       });
 
-      item.addEventListener('mouseleave', function () {
-        if (!hoverNav()) return;
-        clearHoverTimer();
-        hoverTimer = window.setTimeout(function () {
-          hoverTimer = null;
-          closeAll();
-        }, HOVER_CLOSE_DELAY);
+      item.addEventListener('pointerleave', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        if (!hoverOpens()) return;
+        clearIntent();
+        closeTimer = window.setTimeout(function () {
+          if (openItem() === item) closeAll();
+        }, 180);
       });
     });
 
-    // leaving the bar entirely gets the same grace period, so a pointer that
-    // clips the edge of the header on its way back in keeps the panel up
-    header.addEventListener('mouseleave', function () {
-      if (!hoverNav()) return;
-      clearHoverTimer();
-      hoverTimer = window.setTimeout(function () {
-        hoverTimer = null;
-        closeAll();
-      }, HOVER_CLOSE_DELAY);
-    });
-    header.addEventListener('mouseenter', function () {
-      if (hoverNav()) clearHoverTimer();
+    // leaving the bar altogether closes whatever is open
+    header.addEventListener('pointerleave', function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      if (!hoverOpens()) return;
+      clearIntent();
+      closeTimer = window.setTimeout(function () {
+        if (openItem()) closeAll();
+      }, 180);
     });
 
     // a flyout is part of the bar, so a click anywhere else dismisses it
     document.addEventListener('click', function (e) {
       if (!desktopNav.matches) return;
-      if (!header.contains(e.target)) { clearHoverTimer(); closeAll(); }
+      if (!header.contains(e.target)) { closeAll(); }
     });
 
     /* ---- mobile sheet ---- */
@@ -288,7 +355,6 @@
 
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
-      clearHoverTimer();
       if (!desktopNav.matches && nav.classList.contains('is-open')) { closeSheet(); return; }
       var open = openItem();
       if (open) {
@@ -338,7 +404,6 @@
     });
 
     desktopNav.addEventListener('change', function () {
-      clearHoverTimer();
       closeAll();
       header.style.setProperty('--flyout-h', '0px');
       header.classList.remove('is-flyout-open');
@@ -355,25 +420,74 @@
     var modal = document.createElement('section');
     modal.className = 'consultation-modal';
     modal.setAttribute('aria-hidden', 'true');
-    modal.innerHTML =
-      '<div class="consultation-modal__backdrop" data-modal-close></div>' +
-      '<div class="consultation-modal__panel" role="dialog" aria-modal="true" aria-labelledby="consultation-modal-title">' +
-        '<button class="consultation-modal__close" type="button" aria-label="Close consultation form" data-modal-close>&times;</button>' +
-        '<p class="eyebrow">Your new smile starts here</p>' +
-        '<h2 id="consultation-modal-title">Request a complimentary consultation</h2>' +
-        '<p class="consultation-modal__intro">Share your details and our team will be in touch to find a time that works for you.</p>' +
-        '<form class="form consultation-modal__form" action="contact-form1.php" method="post" novalidate data-validate>' +
-          '<div class="form__grid">' +
-            '<div class="field"><label class="field__label" for="modal-fname">First name <span aria-hidden="true">*</span></label><input class="field__input" type="text" id="modal-fname" name="fname" autocomplete="given-name" required aria-describedby="modal-err-fname"><p class="field__error" id="modal-err-fname" data-error-for="fname"></p></div>' +
-            '<div class="field"><label class="field__label" for="modal-lname">Last name <span aria-hidden="true">*</span></label><input class="field__input" type="text" id="modal-lname" name="lname" autocomplete="family-name" required aria-describedby="modal-err-lname"><p class="field__error" id="modal-err-lname" data-error-for="lname"></p></div>' +
-            '<div class="field"><label class="field__label" for="modal-phone">Phone <span aria-hidden="true">*</span></label><input class="field__input" type="tel" id="modal-phone" name="phone" autocomplete="tel" inputmode="tel" required aria-describedby="modal-err-phone"><p class="field__error" id="modal-err-phone" data-error-for="phone"></p></div>' +
-            '<div class="field"><label class="field__label" for="modal-email">Email <span aria-hidden="true">*</span></label><input class="field__input" type="email" id="modal-email" name="email" autocomplete="email" required aria-describedby="modal-err-email"><p class="field__error" id="modal-err-email" data-error-for="email"></p></div>' +
-            '<fieldset class="field field--full"><legend class="field__label">Preferred office <span aria-hidden="true">*</span></legend><div class="radios" aria-describedby="modal-err-office"><label class="radio"><input type="radio" name="office" value="Dublin" required><span class="radio__mark" aria-hidden="true"></span><span class="radio__text"><strong>Dublin</strong><em>4532 Dublin Blvd</em></span></label><label class="radio"><input type="radio" name="office" value="Tracy" required><span class="radio__mark" aria-hidden="true"></span><span class="radio__text"><strong>Tracy</strong><em>1417 N Tracy Blvd</em></span></label></div><p class="field__error" id="modal-err-office" data-error-for="office"></p></fieldset>' +
-          '</div>' +
-          '<input type="hidden" name="recaptcha_response" value="">' +
-          '<div class="form__foot"><button class="btn btn--primary btn--lg" type="submit" name="submit">Request consultation</button><p class="form__note">Your information stays private and is only used to contact you.</p></div><p class="form__summary" role="alert" data-form-summary hidden></p>' +
-        '</form>' +
-      '</div>';
+    // blog/ sits one directory below the asset root, as it does for the action
+    var assetBase = /\/blog\//.test(window.location.pathname) ? '../' : '';
+
+    var star = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+    var stars = '<span class="consultation-modal__stars" aria-hidden="true">' + star + star + star + star + star + '</span>';
+    var phoneIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+    var shieldIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5 5 6.3v5.1c0 4.2 2.9 7.5 7 9.1 4.1-1.6 7-4.9 7-9.1V6.3L12 3.5Z"/></svg>';
+    var clockIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.9"/></svg>';
+    var tickIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+
+    /* Two-column panel: a brand rail carrying the reasons to book, and the
+       form itself on paper. The rail collapses to a slim header under 860px. */
+    modal.innerHTML = [
+      '<div class="consultation-modal__backdrop" data-modal-close></div>',
+      '<div class="consultation-modal__panel" role="dialog" aria-modal="true" aria-labelledby="consultation-modal-title">',
+        '<button class="consultation-modal__close" type="button" aria-label="Close consultation form" data-modal-close>',
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+        '</button>',
+
+        '<aside class="consultation-modal__aside">',
+          '<img class="consultation-modal__logo" src="' + assetBase + 'assets/brand/logo-white.png" alt="Dante Gonzales Orthodontics" width="387" height="86" loading="lazy" decoding="async">',
+          '<p class="consultation-modal__rating">' + stars + '<span>5-star rated &middot; 12,000+ smiles since 1998</span></p>',
+          '<p class="consultation-modal__eyebrow">Complimentary consultation</p>',
+          '<h2 class="consultation-modal__title" id="consultation-modal-title">Your new smile starts here</h2>',
+          '<p class="consultation-modal__lede">Tell us a little about yourself and our team will call to find a time that suits you &mdash; no cost, no obligation.</p>',
+          '<ul class="consultation-modal__points">',
+            '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Complimentary exam &amp; 3D scan</li>',
+            '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Interest-free monthly payment plans</li>',
+            '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Board-certified orthodontist since 1998</li>',
+          '</ul>',
+          '<figure class="consultation-modal__quote">',
+            '<blockquote>Everyone made my daughter feel at ease from the first visit. We knew the plan, the timeline and the cost before we started.</blockquote>',
+            '<figcaption>Tammy F. &middot; Dublin</figcaption>',
+          '</figure>',
+          '<div class="consultation-modal__calls">',
+            '<a href="tel:925-828-2244">' + phoneIcon + '<span><em>Dublin</em><strong>(925) 828-2244</strong></span></a>',
+            '<a href="tel:209-835-0977">' + phoneIcon + '<span><em>Tracy</em><strong>(209) 835-0977</strong></span></a>',
+          '</div>',
+        '</aside>',
+
+        '<div class="consultation-modal__body">',
+          '<div class="consultation-modal__body-head">',
+            '<h3>Tell us about you</h3>',
+            '<p>Four quick details &mdash; about thirty seconds.</p>',
+          '</div>',
+          '<form class="consultation-modal__form" action="contact-form1.php" method="post" novalidate data-validate>',
+            '<div class="form__grid">',
+              '<div class="field"><label class="field__label" for="modal-fname">First name <span aria-hidden="true">*</span></label><input class="field__input" type="text" id="modal-fname" name="fname" autocomplete="given-name" required aria-describedby="modal-err-fname"><p class="field__error" id="modal-err-fname" data-error-for="fname"></p></div>',
+              '<div class="field"><label class="field__label" for="modal-lname">Last name <span aria-hidden="true">*</span></label><input class="field__input" type="text" id="modal-lname" name="lname" autocomplete="family-name" required aria-describedby="modal-err-lname"><p class="field__error" id="modal-err-lname" data-error-for="lname"></p></div>',
+              '<div class="field"><label class="field__label" for="modal-phone">Phone <span aria-hidden="true">*</span></label><input class="field__input" type="tel" id="modal-phone" name="phone" autocomplete="tel" inputmode="tel" required aria-describedby="modal-err-phone"><p class="field__error" id="modal-err-phone" data-error-for="phone"></p></div>',
+              '<div class="field"><label class="field__label" for="modal-email">Email <span aria-hidden="true">*</span></label><input class="field__input" type="email" id="modal-email" name="email" autocomplete="email" required aria-describedby="modal-err-email"><p class="field__error" id="modal-err-email" data-error-for="email"></p></div>',
+              '<fieldset class="field field--full"><legend class="field__label">Preferred office <span aria-hidden="true">*</span></legend><div class="radios" aria-describedby="modal-err-office"><label class="radio"><input type="radio" name="office" value="Dublin" required><span class="radio__mark" aria-hidden="true"></span><span class="radio__text"><strong>Dublin</strong><em>4532 Dublin Blvd</em></span></label><label class="radio"><input type="radio" name="office" value="Tracy" required><span class="radio__mark" aria-hidden="true"></span><span class="radio__text"><strong>Tracy</strong><em>1417 N Tracy Blvd</em></span></label></div><p class="field__error" id="modal-err-office" data-error-for="office"></p></fieldset>',
+            '</div>',
+            '<input type="hidden" name="recaptcha_response" value="">',
+            '<div class="form__foot">',
+              '<button class="btn btn--primary btn--lg btn--block" type="submit" name="submit">Request my consultation</button>',
+              '<p class="form__note">Your information stays private and is only used to contact you.</p>',
+            '</div>',
+            '<p class="form__summary" role="alert" data-form-summary hidden></p>',
+            '<ul class="consultation-modal__assurances">',
+              '<li>' + shieldIcon + 'Private &amp; secure</li>',
+              '<li>' + clockIcon + 'Reply in one business day</li>',
+              '<li>' + tickIcon + 'No obligation</li>',
+            '</ul>',
+          '</form>',
+        '</div>',
+      '</div>'
+    ].join('');
     document.body.appendChild(modal);
 
     // Blog pages are one directory deeper than the form handler.
@@ -502,12 +616,23 @@
     var ticking = false;
     function update() {
       var vh = window.innerHeight;
+      /* Read every rect first, then write every transform. Interleaved, each
+         write invalidates layout and the next read forces it again — one
+         thrash per element, every frame of a scroll. */
+      var writes = [];
       els.forEach(function (el) {
         var r = el.getBoundingClientRect();
         if (r.bottom < -200 || r.top > vh + 200) return;
         var amount = parseFloat(el.getAttribute('data-parallax')) || 10;
         var progress = (r.top + r.height / 2 - vh / 2) / vh;   // -1 … 1
-        el.style.transform = 'translate3d(0,' + (-progress * amount).toFixed(2) + 'px,0)';
+        // An element taller than the viewport (or one wrapping the whole page)
+        // can push this well past 1 and shift its content by a visible chunk,
+        // so keep the drift inside the range the effect was drawn for.
+        progress = Math.max(-1, Math.min(1, progress));
+        writes.push([el, (-progress * amount).toFixed(2)]);
+      });
+      writes.forEach(function (w) {
+        w[0].style.transform = 'translate3d(0,' + w[1] + 'px,0)';
       });
       ticking = false;
     }
@@ -516,6 +641,58 @@
     }, { passive: true });
     window.addEventListener('resize', update);
     update();
+  })();
+
+  /* ----------------------------------------------------- review wall */
+  /* Each row loops by translating its track -50%. That only reads as seamless
+     if the second half is an exact copy of the first, so the copy is made here
+     rather than duplicated in the markup of twenty-five pages — and the clones
+     are hidden from assistive tech, which should hear each review once.
+     Duration is derived from the track's real width so both rows drift at the
+     same speed regardless of how much copy they carry. */
+  (function reviewWall() {
+    var SPEED = 46;                        // px per second
+    $$('[data-wall-track]').forEach(function (track) {
+      var originals = Array.prototype.slice.call(track.children);
+      if (!originals.length) return;
+
+      originals.forEach(function (card) {
+        var clone = card.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        clone.querySelectorAll('a, button').forEach(function (el) { el.tabIndex = -1; });
+        track.appendChild(clone);
+      });
+
+      function size() {
+        var cloneFirst = track.children[originals.length];
+        var pass = cloneFirst ? (cloneFirst.offsetLeft - originals[0].offsetLeft) : (track.scrollWidth / 2);
+        if (pass > 0) {
+          track.style.setProperty('--wall-dur', (pass / SPEED).toFixed(1) + 's');
+          track.style.setProperty('--wall-pass', pass + 'px');
+        }
+      }
+      size();
+      // late-loading fonts change the card widths under it
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(size);
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(size, 200);
+      });
+    });
+  })();
+
+  /* ------------------------------------------------------- review cards */
+  /* A two-line review sitting in a card sized for a six-line one leaves a
+     hole. Marking the short ones lets CSS set them as a pull quote instead,
+     so they fill the card on purpose rather than by accident. */
+  (function shortQuotes() {
+    var SHORT = 110;                       // characters, measured not guessed
+    $$('.quote').forEach(function (card) {
+      var body = $('.quote__body', card);
+      if (!body) return;
+      if (body.textContent.trim().length <= SHORT) card.classList.add('quote--short');
+    });
   })();
 
   /* --------------------------------------------------- before / after slider */
@@ -1109,61 +1286,60 @@
   /* -------------------------------------------------------- whatsapp fab */
   (function initWhatsAppFab() {
     var wrap = document.getElementById('whatsappFabWrap');
-    if (!wrap) {
-      wrap = document.createElement('div');
-      wrap.className = 'whatsapp-fab-wrap';
-      wrap.id = 'whatsappFabWrap';
-      wrap.innerHTML =
-        '<div class="whatsapp-card" id="whatsappCard" role="dialog" aria-modal="false" aria-labelledby="waCardTitle">' +
-          '<div class="whatsapp-card__head">' +
-            '<div class="whatsapp-card__brand">' +
-              '<div class="whatsapp-card__avatar" aria-hidden="true">' +
-                '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#075e54" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>' +
-              '</div>' +
-              '<div>' +
-                '<h3 class="whatsapp-card__title" id="waCardTitle">Dante Gonzales Ortho</h3>' +
-                '<span class="whatsapp-card__status">Online &bull; Available to chat</span>' +
-              '</div>' +
+    if (wrap) return;
+
+    wrap = document.createElement('div');
+    wrap.className = 'whatsapp-fab-wrap';
+    wrap.id = 'whatsappFabWrap';
+    wrap.innerHTML =
+      '<div class="whatsapp-card" id="whatsappCard" role="dialog" aria-modal="false" aria-labelledby="waCardTitle">' +
+        '<div class="whatsapp-card__head">' +
+          '<div class="whatsapp-card__brand">' +
+            '<div class="whatsapp-card__avatar" aria-hidden="true">' +
+              '<svg width="22" height="22" viewBox="0 0 24 24" fill="#075e54" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.08L2 22l5.08-1.34A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.46 14.15c-.24.67-1.2 1.23-1.96 1.3-.52.05-1.19.09-3.46-.85-2.89-1.2-4.76-4.13-4.9-4.33-.15-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.11 1-2.4.26-.29.57-.37.76-.37.19 0 .38.01.54.02.18.01.42-.07.66.5.25.59.84 2.05.92 2.2.08.15.13.33.03.52-.1.2-.15.32-.3.49-.15.17-.31.38-.44.5-.15.15-.3.3-.13.6.17.29.76 1.26 1.64 2.04 1.12 1 2.07 1.31 2.36 1.46.29.15.46.12.63-.08.17-.2.74-.86.94-1.15.2-.29.4-.25.66-.15.26.1 1.7.8 2 .95.29.15.49.22.56.34.07.13.07.73-.17 1.4z"/></svg>' +
             '</div>' +
-            '<button class="whatsapp-card__close" type="button" id="whatsappCardClose" aria-label="Close chat options">' +
-              '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>' +
-            '</button>' +
+            '<div>' +
+              '<h3 class="whatsapp-card__title" id="waCardTitle">Dante Gonzales Ortho</h3>' +
+              '<span class="whatsapp-card__status">Online &bull; Available to chat</span>' +
+            '</div>' +
           '</div>' +
-          '<div class="whatsapp-card__body">' +
-            '<p class="whatsapp-card__msg">' +
-              'Hi there! 👋 Which office would you like to message on WhatsApp?' +
-            '</p>' +
-            '<ul class="whatsapp-card__options">' +
-              '<li>' +
-                '<a class="whatsapp-card__link" href="https://wa.me/19258282244?text=Hi%2C%20I%20have%20a%20question%20about%20orthodontic%20treatment%20at%20the%20Dublin%20office." target="_blank" rel="noopener noreferrer">' +
-                  '<div>' +
-                    '<strong>Dublin Office</strong>' +
-                    '<span>4532 Dublin Blvd &bull; 925-828-2244</span>' +
-                  '</div>' +
-                  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>' +
-                '</a>' +
-              '</li>' +
-              '<li>' +
-                '<a class="whatsapp-card__link" href="https://wa.me/12098350977?text=Hi%2C%20I%20have%20a%20question%20about%20orthodontic%20treatment%20at%20the%20Tracy%20office." target="_blank" rel="noopener noreferrer">' +
-                  '<div>' +
-                    '<strong>Tracy Office</strong>' +
-                    '<span>1417 N Tracy Blvd &bull; 209-835-0977</span>' +
-                  '</div>' +
-                  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>' +
-                '</a>' +
-              '</li>' +
-            '</ul>' +
-          '</div>' +
+          '<button class="whatsapp-card__close" type="button" id="whatsappCardClose" aria-label="Close chat options">' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>' +
+          '</button>' +
         '</div>' +
-        '<a class="whatsapp-fab" id="whatsappFabBtn" href="https://wa.me/19258282244?text=Hi%2C%20I%20have%20a%20question%20about%20orthodontic%20treatment%20at%20Dante%20Gonzales%20Orthodontics." target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" aria-haspopup="dialog" aria-expanded="false">' +
-          '<span class="whatsapp-fab__pulse" aria-hidden="true"></span>' +
-          '<span class="whatsapp-fab__label">Chat on WhatsApp</span>' +
-          '<svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">' +
-            '<path d="M16 2.5C8.544 2.5 2.5 8.544 2.5 16c0 2.656.772 5.131 2.1 7.222L3 30.5l7.5-1.575A13.43 13.43 0 0 0 16 29.5c7.456 0 13.5-6.044 13.5-13.5S23.456 2.5 16 2.5zm0 24.5c-2.222 0-4.316-.628-6.103-1.716l-.438-.266-4.453.934.95-4.341-.291-.459A10.932 10.932 0 0 1 5 16c0-6.065 4.935-11 11-11s11 4.935 11 11-4.935 11-11 11zm6.05-8.275c-.331-.166-1.956-.966-2.26-1.075-.303-.112-.525-.166-.747.166-.222.331-.859 1.075-1.053 1.297-.194.222-.388.25-.719.084-.331-.166-1.4-.516-2.666-1.644-.984-.878-1.65-1.962-1.844-2.294-.194-.331-.022-.51.144-.675.15-.147.331-.388.497-.581.166-.194.222-.331.331-.553.112-.222.056-.416-.028-.581-.084-.166-.747-1.8-1.025-2.466-.269-.65-.544-.562-.747-.572l-.637-.012c-.222 0-.581.084-.887.416-.303.331-1.162 1.134-1.162 2.766s1.191 3.206 1.356 3.428c.166.222 2.344 3.578 5.678 5.019.794.344 1.412.55 1.894.703.797.253 1.522.219 2.097.134.641-.097 1.956-.8 2.234-1.572.278-.772.278-1.434.194-1.572-.083-.14-.305-.224-.636-.39z"/>' +
-          '</svg>' +
-        '</a>';
-      document.body.appendChild(wrap);
-    }
+        '<div class="whatsapp-card__body">' +
+          '<p class="whatsapp-card__msg">' +
+            'Hi there! 👋 Which office would you like to message on WhatsApp?' +
+          '</p>' +
+          '<ul class="whatsapp-card__options">' +
+            '<li>' +
+              '<a class="whatsapp-card__link" href="https://wa.me/19258282244?text=Hi%2C%20I%20have%20a%20question%20about%20orthodontic%20treatment%20at%20the%20Dublin%20office." target="_blank" rel="noopener noreferrer">' +
+                '<div>' +
+                  '<strong>Dublin Office</strong>' +
+                  '<span>4532 Dublin Blvd &bull; 925-828-2244</span>' +
+                '</div>' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>' +
+              '</a>' +
+            '</li>' +
+            '<li>' +
+              '<a class="whatsapp-card__link" href="https://wa.me/12098350977?text=Hi%2C%20I%20have%20a%20question%20about%20orthodontic%20treatment%20at%20the%20Tracy%20office." target="_blank" rel="noopener noreferrer">' +
+                '<div>' +
+                  '<strong>Tracy Office</strong>' +
+                  '<span>1417 N Tracy Blvd &bull; 209-835-0977</span>' +
+                '</div>' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>' +
+              '</a>' +
+            '</li>' +
+          '</ul>' +
+        '</div>' +
+      '</div>' +
+      '<a class="whatsapp-fab" id="whatsappFabBtn" href="https://wa.me/19258282244?text=Hi%2C%20I%20have%20a%20question%20about%20orthodontic%20treatment%20at%20Dante%20Gonzales%20Orthodontics." target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" aria-haspopup="dialog" aria-expanded="false">' +
+        '<span class="whatsapp-fab__label">Chat on WhatsApp</span>' +
+        '<svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true" fill="currentColor">' +
+          '<path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.08L2 22l5.08-1.34A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.46 14.15c-.24.67-1.2 1.23-1.96 1.3-.52.05-1.19.09-3.46-.85-2.89-1.2-4.76-4.13-4.9-4.33-.15-.19-1.17-1.56-1.17-2.97 0-1.41.74-2.11 1-2.4.26-.29.57-.37.76-.37.19 0 .38.01.54.02.18.01.42-.07.66.5.25.59.84 2.05.92 2.2.08.15.13.33.03.52-.1.2-.15.32-.3.49-.15.17-.31.38-.44.5-.15.15-.3.3-.13.6.17.29.76 1.26 1.64 2.04 1.12 1 2.07 1.31 2.36 1.46.29.15.46.12.63-.08.17-.2.74-.86.94-1.15.2-.29.4-.25.66-.15.26.1 1.7.8 2 .95.29.15.49.22.56.34.07.13.07.73-.17 1.4z"/>' +
+        '</svg>' +
+      '</a>';
+    document.body.appendChild(wrap);
 
     var btn = wrap.querySelector('#whatsappFabBtn');
     var card = wrap.querySelector('#whatsappCard');
@@ -1258,6 +1434,78 @@
     });
   })();
 
+  /* ------------------------------------------------------- crew bio toggles */
+  /* The crew bios are clamped to a few lines so every card in a row is the
+     same height. Only the ones that actually overflow get a Read more button —
+     several of the bios are short enough to fit whole, and a toggle that
+     reveals nothing is worse than no toggle. */
+  (function initCrewBioToggles() {
+    var buttons = $$('.crew__more');
+    if (!buttons.length) return;
+
+    function overflows(bio) {
+      return bio.scrollHeight - bio.clientHeight > 1;
+    }
+
+    function refresh() {
+      buttons.forEach(function (btn) {
+        var card = btn.closest('.crew__item');
+        var bio = card && $('.crew__bio', card);
+        if (!bio) return;
+        /* an expanded card is never clamped, so it can't report overflow —
+           leave its button alone and only re-test the collapsed ones */
+        if (card.classList.contains('is-expanded')) return;
+        btn.classList.toggle('is-available', overflows(bio));
+      });
+    }
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.crew__item');
+        if (!card) return;
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        var next = !expanded;
+        card.classList.toggle('is-expanded', next);
+        btn.setAttribute('aria-expanded', String(next));
+        var label = $('.crew__more-label', btn);
+        if (label) label.textContent = next ? 'Read less' : 'Read more';
+      });
+    });
+
+    /* Measuring at defer time is too early — the display face is still
+       swapping in and the cards are below the fold, so the bios report no
+       overflow and every button stays hidden. Re-measure at each point the
+       text can reflow, and again when a card first scrolls into view. */
+    refresh();
+    requestAnimationFrame(refresh);
+    window.addEventListener('load', refresh);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(refresh);
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        var seen = false;
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          io.unobserve(entry.target);
+          seen = true;
+        });
+        if (seen) refresh();
+      }, { rootMargin: '200px' });
+      buttons.forEach(function (btn) {
+        var card = btn.closest('.crew__item');
+        if (card) io.observe(card);
+      });
+    }
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(refresh, 150);
+    });
+  })();
+
   /* -------------------------------------------------- promises mobile carousel dots */
   (function initPromisesCarousel() {
     var rail = $('.promises[data-rail]');
@@ -1341,12 +1589,17 @@
     root.className = 'cursor';
     root.setAttribute('aria-hidden', 'true');
     root.innerHTML = '<div class="cursor__glow"></div>' +
-                     '<div class="cursor__ring"></div>';
+                     '<div class="cursor__ring"></div>' +
+                     '<div class="cursor__dot"></div>';
     document.body.appendChild(root);
     document.documentElement.classList.add('has-cursor');
 
     var glow = root.querySelector('.cursor__glow');
     var ring = root.querySelector('.cursor__ring');
+    // the dot rides at the ring's centre rather than at the pointer itself:
+    // the native arrow already marks the exact point, and a dot underneath it
+    // would spend most of its life hidden behind the arrowhead.
+    var dot  = root.querySelector('.cursor__dot');
 
     var px = window.innerWidth / 2,  py = window.innerHeight / 2;  // pointer
     var gx = px, gy = py;                                          // glow
@@ -1378,6 +1631,7 @@
 
       place(glow, gx, gy, 1);
       place(ring, rx, ry, down ? 0.86 : 1);
+      place(dot,  rx, ry, down ? 1.5 : 1);
 
       raf = window.requestAnimationFrame(frame);
     }
@@ -1415,14 +1669,19 @@
     // single move event, so the ring would keep whatever state it had — a
     // media lens still open over the paragraph that scrolled into its place.
     // Re-read what is actually under the pointer instead, once per frame.
-    var scrollQueued = false;
+    /* elementFromPoint forces a style and layout flush, so this must not run
+       per frame: with smooth scrolling a single wheel notch keeps firing
+       scroll events for as long as the glide lasts, and that flush lands in
+       every one of those frames. A trailing debounce re-reads once the page
+       has settled, which is the only moment the answer can have changed for
+       good anyway. */
+    var settleTimer = null;
     window.addEventListener('scroll', function () {
-      if (!awake || scrollQueued) return;
-      scrollQueued = true;
-      window.requestAnimationFrame(function () {
-        scrollQueued = false;
-        evaluate(document.elementFromPoint(px, py));
-      });
+      if (!awake) return;
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(function () {
+        if (awake) evaluate(document.elementFromPoint(px, py));
+      }, 90);
     }, { passive: true });
 
     // relatedTarget is null when the pointer leaves the document entirely —

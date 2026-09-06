@@ -306,3 +306,79 @@ DirectoryIndex index.html
   RewriteCond %{DOCUMENT_ROOT}/$1.html -f
   RewriteRule ^(.+)\.php$ /$1.html [R=301,L]
 </IfModule>
+
+# =============================================================================
+# DELIVERY — compression, caching, security headers
+#
+# Everything above this line routes requests; everything below governs how the
+# response is sent. All three blocks are guarded by IfModule, so a host without
+# a given module serves the site unchanged rather than throwing a 500.
+# =============================================================================
+
+# ------------------------------------------------------------- compression --
+# The stylesheet alone is ~228 KB uncompressed and drops to roughly a sixth of
+# that gzipped. Images and fonts are already compressed formats — running them
+# through DEFLATE again only burns CPU, so they are deliberately absent here.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript text/javascript
+  AddOutputFilterByType DEFLATE application/json application/ld+json
+  AddOutputFilterByType DEFLATE application/xml application/rss+xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/ttf font/otf application/vnd.ms-fontobject
+</IfModule>
+
+# ------------------------------------------------------------------ caching --
+# Filenames here are NOT content-hashed, so a long max-age on CSS/JS would keep
+# serving a stale build to returning visitors after a deploy. Those two revalidate
+# on every request instead — a 304 is a few hundred bytes and settles in one round
+# trip. Images and fonts do get the long immutable cache: when one of those
+# changes it is nearly always a new filename anyway.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                          "access plus 1 month"
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType text/css                  "access plus 0 seconds"
+  ExpiresByType application/javascript    "access plus 0 seconds"
+  ExpiresByType text/javascript           "access plus 0 seconds"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType image/jpeg                "access plus 1 year"
+  ExpiresByType image/webp                "access plus 1 year"
+  ExpiresByType image/avif                "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+  ExpiresByType image/x-icon              "access plus 1 year"
+  ExpiresByType font/woff2                "access plus 1 year"
+  ExpiresByType application/xml           "access plus 1 hour"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # HTML always revalidates so a content fix is live immediately.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # Un-hashed CSS/JS: revalidate, but serve from cache on a 304.
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(png|jpe?g|webp|avif|gif|svg|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # --------------------------------------------------------------- security --
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()"
+
+  # Content-Security-Policy, derived from what the site actually loads:
+  #   styles/fonts  -> Google Fonts (fonts.googleapis.com + fonts.gstatic.com)
+  #   frame-src     -> youtube-nocookie, the player js/main.js injects on click
+  #   'unsafe-inline' is required by the inline <script> blocks and JSON-LD
+  #   already in the pages; removing it means moving those to files first.
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; upgrade-insecure-requests"
+
+  # HSTS is deliberately left off. Browsers honour it for the full max-age even
+  # after the header is withdrawn, so it is a one-way door: switch it on only
+  # once HTTPS is confirmed good on the apex and every subdomain.
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
