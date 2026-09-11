@@ -185,16 +185,53 @@
 
     var items = $$('.nav__item--has-menu', nav);
 
+    /* ---- where we are ----
+       Every page carries the same copied header, so the current page is
+       marked here from the URL rather than by hand in each file: the link to
+       this page gets aria-current="page", and the top-level item whose panel
+       lists it gets aria-current="true" -- the bar draws its dot under that
+       one. A blog post has no link of its own, so it lights up the section
+       that lists the blog. */
+    (function markCurrent() {
+      function norm(path) { return path.replace(/\.html$/, '').replace(/\/index$/, '/'); }
+      var here   = norm(window.location.pathname);
+      var post   = /\/blog\/[^\/]+$/;
+      var target = post.test(here) ? here.replace(post, '/blog') : here;
+
+      $$('.nav__link[aria-current]', nav).forEach(function (a) { a.removeAttribute('aria-current'); });
+      // menu entries only -- not the promo card in a panel, not the drawer button
+      $$('.nav__list > .nav__item > .nav__link, .mega__list a', nav).forEach(function (a) {
+        if (a.hash || a.classList.contains('nav__toggle')) return;
+        if (a.origin !== window.location.origin || norm(a.pathname) !== target) return;
+        var toggle = $('.nav__toggle', a.closest('.nav__item'));
+        if (target === here) a.setAttribute('aria-current', 'page');
+        if (toggle) toggle.setAttribute('aria-current', 'true');
+      });
+    })();
+
     function openItem() {
       return items.filter(function (i) { return i.classList.contains('is-open'); })[0] || null;
     }
 
-    /* ---- the curtain ---- */
+    /* ---- the open panel ----
+       A panel is a card hanging from its own item. The three-column ones are
+       wider than the room to the right of a mid-bar item, so on opening the
+       card is slid back left just far enough to end 16px inside the window. */
+    function placePanel(item) {
+      var panel = item && $('.mega', item);
+      if (!panel) return;
+      panel.style.left = '';
+      var edge = document.documentElement.clientWidth - 16;
+      var over = panel.getBoundingClientRect().right - edge;
+      if (over > 0) panel.style.left = -Math.ceil(over) + 'px';
+    }
+
     function setFlyout(item) {
       if (!desktopNav.matches) return;
       var inner = item && $('.mega__inner', item);
       header.style.setProperty('--flyout-h', inner ? inner.offsetHeight + 'px' : '0px');
       header.classList.toggle('is-flyout-open', !!item);
+      placePanel(item);
     }
 
     function showScrim(on) {
