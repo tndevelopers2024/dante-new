@@ -2570,7 +2570,8 @@ p.hero__headline {
   flex-direction: column;
   padding: clamp(1.35rem, 1.15rem + .6vw, 1.75rem);
   border-radius: var(--r-md);
-  height: 100%;
+  height: auto;
+  align-self: stretch;
 }
 .wall .quote__body {
   flex: 1 1 auto;
@@ -2583,7 +2584,15 @@ p.hero__headline {
   line-height: 1.62;
   color: var(--ink-2);
 }
-.wall .quote--short .quote__body p { font-size: 1.06rem; line-height: 1.45; }
+.wall .quote--short .quote__body {
+  align-items: flex-start;
+}
+.wall .quote--short .quote__body p {
+  font-size: var(--fs-sm);
+  line-height: 1.62;
+  font-weight: 450;
+  color: var(--ink-2);
+}
 .wall .quote::before { font-size: 6rem; top: .1em; right: .05em; }
 .wall .quote__stars { margin-bottom: .75rem; }
 .wall .quote__stars svg { width: 15px; height: 15px; }
