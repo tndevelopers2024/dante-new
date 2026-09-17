@@ -310,48 +310,53 @@
 
 <section class="section section--alt" aria-labelledby="sec-3">
   <div class="shell">
-    <div class="split split--reverse">
+
+    <!-- Top: heading + prose (left) | image (right) -->
+    <div class="split split--reverse" style="align-items: flex-start;">
       <div class="split__copy">
         <h2 class="section__title" id="sec-3" data-reveal>Treatment Options We Offer</h2>
-      <div class="prose" data-reveal>
-        <p>We offer a range of treatment options depending on your needs and comfort. If you’re a teenager worried about appearance or an adult wanting subtle options, we plan every procedure carefully.</p>
-        <p>Invisalign aligners are created using advanced 3D digital imaging by Align Technology, showcasing innovative align technology that ensures a perfect fit. This means each aligner is made to fit your mouth exactly, providing efficient and controlled tooth movement.</p>
-      </div>
-
-      <div class="table-scroll" data-reveal>
-        <table class="compare">
-          <caption class="sr-only">Comparison table</caption>
-          <thead>
-            <tr><th scope="col">Treatment Type</th><th scope="col">Description</th><th scope="col">Who It Suits</th></tr>
-          </thead>
-          <tbody>
-          <tr>
-            <th scope="row">Traditional Braces</th>
-            <td>Strong and reliable, metal brackets and wires</td>
-            <td>Great for children and teens with complex movement</td>
-          </tr>
-          <tr>
-            <th scope="row">Ceramic Braces</th>
-            <td>Tooth-coloured, less visible</td>
-            <td>Adults or professionals who want discreet treatment</td>
-          </tr>
-          <tr>
-            <th scope="row">Clear Aligners / Invisalign Treatment</th>
-            <td>Nearly invisible trays that shift teeth gently</td>
-            <td>Anyone wanting flexibility and appearance-friendly option</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="prose" data-reveal>
-        <p>Some people switch between braces and clear aligners midway if it helps results. We keep that open. That’s how treatment stays human, not robotic.</p>
-      </div>
+        <div class="prose" data-reveal>
+          <p>We offer a range of treatment options depending on your needs and comfort. If you're a teenager worried about appearance or an adult wanting subtle options, we plan every procedure carefully.</p>
+          <p>Invisalign aligners are created using advanced 3D digital imaging by Align Technology, showcasing innovative align technology that ensures a perfect fit. This means each aligner is made to fit your mouth exactly, providing efficient and controlled tooth movement.</p>
+        </div>
       </div>
       <div class="split__media" data-reveal data-reveal-delay="2">
         <img src="assets/locations/tracy/braces-tracy-02.jpg" alt="Thumb" loading="lazy" decoding="async">
       </div>
     </div>
+
+    <!-- Bottom: table + prose, centred -->
+    <div style="margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center;">
+      <div data-reveal style="width: 100%;">
+        <table class="compare" style="margin-left: auto; margin-right: auto;">
+          <caption class="sr-only">Comparison table</caption>
+          <thead>
+            <tr><th scope="col">Treatment Type</th><th scope="col">Description</th><th scope="col">Who It Suits</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Traditional Braces</th>
+              <td>Strong and reliable, metal brackets and wires</td>
+              <td>Great for children and teens with complex movement</td>
+            </tr>
+            <tr>
+              <th scope="row">Ceramic Braces</th>
+              <td>Tooth-coloured, less visible</td>
+              <td>Adults or professionals who want discreet treatment</td>
+            </tr>
+            <tr>
+              <th scope="row">Clear Aligners / Invisalign Treatment</th>
+              <td>Nearly invisible trays that shift teeth gently</td>
+              <td>Anyone wanting flexibility and appearance-friendly option</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="prose" data-reveal style="max-width: 48rem; margin-top: 1.5rem; text-align: center;">
+        <p>Some people switch between braces and clear aligners midway if it helps results. We keep that open. That's how treatment stays human, not robotic.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -377,33 +382,36 @@
     <div class="split">
       <div class="split__copy">
         <h2 class="section__title" id="sec-5" data-reveal>A Clean and Comfortable Office</h2>
-      <div class="prose" data-reveal>
-        <p>Our orthodontic office in Tracy CA is designed to make people feel comfortable. The waiting area is clean, bright, and calm. The office staff greets everyone with genuine warmth. We’ve heard from many satisfied patients that our entire staff treats them like family. That matters to us more than fancy decor.</p>
-        <p>During your visits, we make sure every procedure is explained clearly, from how to brush with braces to what foods to avoid. We talk, we laugh sometimes, we adjust wires carefully. Some days it feels more like catching up with friends than a clinic visit.</p>
-      </div>
+        <div class="prose" data-reveal>
+          <p>Our orthodontic office in Tracy CA is designed to make people feel comfortable. The waiting area is clean, bright, and calm. The office staff greets everyone with genuine warmth. We've heard from many satisfied patients that our entire staff treats them like family. That matters to us more than fancy decor.</p>
+          <p>During your visits, we make sure every procedure is explained clearly, from how to brush with braces to what foods to avoid. We talk, we laugh sometimes, we adjust wires carefully. Some days it feels more like catching up with friends than a clinic visit.</p>
+        </div>
       </div>
       <div class="split__media" data-reveal data-reveal-delay="2">
         <img src="assets/locations/tracy/braces-tracy-03.jpg" alt="Thumb" loading="lazy" decoding="async">
-        <img src="assets/locations/tracy/braces-tracy-04.jpg" alt="Thumb" loading="lazy" decoding="async">
       </div>
     </div>
   </div>
 </section>
 
 <section class="section" aria-labelledby="sec-6">
-  <div class="shell shell--narrow">
-    <div class="section__head">
-      <h2 class="section__title" id="sec-6" data-reveal>Orthodontic Services Under One Roof</h2>
+  <div class="shell">
+    <div class="split split--reverse">
+      <div class="split__copy">
+        <h2 class="section__title" id="sec-6" data-reveal>Orthodontic Services Under One Roof</h2>
+        <div class="prose" data-reveal>
+          <p>Our orthodontic services cover braces for all ages, children, teens, and adults. We also provide Invisalign treatment, clear aligners, and retainers. Some patients come after being referred by their dentist or general dentists, while others find us through family or friends.</p>
+          <p>We even help people who had braces earlier and now need a small correction. Sometimes teeth shift again, normal over time. We treat that too. Feels satisfying when we see that steady improvement returning.</p>
+        </div>
+
+        <div class="cta-row" data-reveal>
+          <a class="btn btn--primary btn--lg" href="contact-dublin.html">Start Your New Smile Journey</a>
+        </div>
+      </div>
+      <div class="split__media" data-reveal data-reveal-delay="2">
+        <img src="assets/locations/tracy/braces-tracy-04.jpg" alt="Thumb" loading="lazy" decoding="async">
+      </div>
     </div>
-      <div class="prose" data-reveal>
-        <p>Our orthodontic services cover braces for all ages, children, teens, and adults. We also provide Invisalign treatment, clear aligners, and retainers. Some patients come after being referred by their dentist or general dentists, while others find us through family or friends.</p>
-        <p>We even help people who had braces earlier and now need a small correction. Sometimes teeth shift again, normal over time. We treat that too. Feels satisfying when we see that steady improvement returning.</p>
-      </div>
-
-      <div class="cta-row" data-reveal>
-        <a class="btn btn--primary btn--lg" href="contact-dublin.html">Start Your New Smile Journey</a>
-      </div>
-
   </div>
 </section>
 
@@ -510,33 +518,36 @@
     <div class="split split--reverse">
       <div class="split__copy">
         <h2 class="section__title" id="sec-11" data-reveal>What Makes Us a Professional Choice</h2>
-      <div class="prose" data-reveal>
-        <p>People often say our orthodontic office feels more professional yet personal. Every orthodontist, assistant, and team member is trained to make sure each patient feel comfortable. From the initial consultation to the next appointment, we make things easy to follow.</p>
-        <p>We focus on precision but also kindness. Our board-certified orthodontist keeps learning new methods in orthodontics. Dr Gonzales is known for staying ahead, whether it’s clear aligners, modern brackets, or digital scans. And when something feels confusing, we pause, explain again. Sometimes clarity is all people need.</p>
-      </div>
+        <div class="prose" data-reveal>
+          <p>People often say our orthodontic office feels more professional yet personal. Every orthodontist, assistant, and team member is trained to make sure each patient feel comfortable. From the initial consultation to the next appointment, we make things easy to follow.</p>
+          <p>We focus on precision but also kindness. Our board-certified orthodontist keeps learning new methods in orthodontics. Dr Gonzales is known for staying ahead, whether it’s clear aligners, modern brackets, or digital scans. And when something feels confusing, we pause, explain again. Sometimes clarity is all people need.</p>
+        </div>
 
-      <div class="cta-row" data-reveal>
-        <a class="btn btn--primary btn--lg" href="contact-dublin.html">Contact Our Tracy CA Office</a>
-      </div>
+        <div class="cta-row" data-reveal>
+          <a class="btn btn--primary btn--lg" href="contact-dublin.html">Contact Our Tracy CA Office</a>
+        </div>
       </div>
       <div class="split__media" data-reveal data-reveal-delay="2">
         <img src="assets/locations/tracy/braces-tracy-07.jpg" alt="Thumb" loading="lazy" decoding="async">
-        <img src="assets/locations/tracy/braces-tracy-08.jpg" alt="Thumb" loading="lazy" decoding="async">
       </div>
     </div>
   </div>
 </section>
 
 <section class="section" aria-labelledby="sec-12">
-  <div class="shell shell--narrow">
-    <div class="section__head">
-      <h2 class="section__title" id="sec-12" data-reveal>Braces and Confidence</h2>
-    </div>
-      <div class="prose" data-reveal>
-        <p>It’s not just about straight teeth. It’s about how you feel confident every time you smile. Some adults tell us they avoided smiling for years until they finished treatment. Others say they smile more freely now. The change is both outside and inside.</p>
-        <p>We often see kids start shy and end bold. Maybe that’s what makes this work satisfying. Seeing them show their new smile, that small sparkle of pride. That’s worth every adjustment visit.</p>
+  <div class="shell">
+    <div class="split">
+      <div class="split__copy">
+        <h2 class="section__title" id="sec-12" data-reveal>Braces and Confidence</h2>
+        <div class="prose" data-reveal>
+          <p>It’s not just about straight teeth. It’s about how you feel confident every time you smile. Some adults tell us they avoided smiling for years until they finished treatment. Others say they smile more freely now. The change is both outside and inside.</p>
+          <p>We often see kids start shy and end bold. Maybe that’s what makes this work satisfying. Seeing them show their new smile, that small sparkle of pride. That’s worth every adjustment visit.</p>
+        </div>
       </div>
-
+      <div class="split__media" data-reveal data-reveal-delay="2">
+        <img src="assets/locations/tracy/braces-tracy-08.jpg" alt="Thumb" loading="lazy" decoding="async">
+      </div>
+    </div>
   </div>
 </section>
 
