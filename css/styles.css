@@ -1163,6 +1163,7 @@ body.is-modal-open { overflow: hidden; }
   .mega {
     position: absolute; top: calc(100% + 8px); left: 0; z-index: 2;
     width: max-content; min-width: 17rem;
+    max-width: calc(100vw - 32px);
     background: var(--paper);
     border: 1px solid var(--line);
     border-left: 3px solid var(--brand-500);
@@ -1184,10 +1185,14 @@ body.is-modal-open { overflow: hidden; }
     align-items: start;
     gap: 1.25rem clamp(1.75rem, 2.6vw, 2.75rem);
     padding: 1.6rem 1.9rem 1.75rem 1.6rem;
+    max-height: var(--panel-max-height, calc(100dvh - 100px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
-  .mega__inner--split { grid-template-columns: minmax(12rem, 16rem) minmax(12rem, 16rem) 15rem; }
-  .mega__inner--wide  { grid-template-columns: repeat(3, minmax(11rem, 15rem)); }
+  .mega__inner--split { grid-template-columns: minmax(0, 16rem) minmax(0, 16rem) minmax(0, 15rem); }
+  .mega__inner--wide  { grid-template-columns: repeat(3, minmax(0, 15rem)); }
 }
+.mega__col { min-width: 0; }
 
 /* entries: plain lines led by a small chevron that steps right when pointed
    at; the page you are on is set in brand blue behind a sun chevron */
@@ -1202,7 +1207,7 @@ body.is-modal-open { overflow: hidden; }
 
 .mega__list { display: grid; gap: .1rem; }
 .mega__list a {
-  display: grid; grid-template-columns: .85rem 1fr;
+  display: grid; grid-template-columns: .85rem minmax(0, 1fr);
   column-gap: .3rem;
   padding: .38rem .25rem;
   border-radius: var(--r-xs);
@@ -1317,6 +1322,7 @@ body.is-modal-open { overflow: hidden; }
   .nav {
     position: absolute; top: 100%; left: -1px; right: -1px; z-index: 1;
     height: 0;
+    visibility: hidden;
     overflow: hidden;
     background: rgba(255, 255, 255, .985);
     -webkit-backdrop-filter: var(--nav-blur);
@@ -1325,10 +1331,11 @@ body.is-modal-open { overflow: hidden; }
     border-top: 0;
     border-radius: 0 0 var(--r-xl, 24px) var(--r-xl, 24px);
     box-shadow: var(--nav-lift-scrolled);
-    transition: height .42s var(--e-nav);
+    transition: height .42s var(--e-nav), visibility .42s;
   }
   .nav.is-open {
     height: calc(100dvh - var(--header-h) - var(--header-float) * 3);
+    visibility: visible;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -1354,6 +1361,8 @@ body.is-modal-open { overflow: hidden; }
     padding: 1.05rem .1rem;
     font-size: 1.0625rem;
     color: var(--ink);
+    white-space: normal;
+    text-align: left;
   }
   .nav__chev { opacity: .5; }
 
@@ -1380,11 +1389,11 @@ body.is-modal-open { overflow: hidden; }
     position: static;
     height: auto;
     overflow: hidden;
-    opacity: 1; visibility: visible;
+    opacity: 1; visibility: hidden;
     display: grid; grid-template-rows: 0fr;
-    transition: grid-template-rows .34s var(--e-nav);
+    transition: grid-template-rows .34s var(--e-nav), visibility .34s;
   }
-  .nav__item.is-open > .mega { grid-template-rows: 1fr; }
+  .nav__item.is-open > .mega { grid-template-rows: 1fr; visibility: visible; }
   .mega__inner {
     min-height: 0; overflow: hidden;
     grid-template-columns: 1fr !important;
@@ -1392,10 +1401,10 @@ body.is-modal-open { overflow: hidden; }
     padding: 0;                 /* padding here would keep the 0fr row open */
   }
   .mega__col, .mega__feature { opacity: 1; transform: none; transition: none; }
-  .mega__col:last-child { padding-bottom: var(--s-4); }
+  .mega__col { padding-bottom: var(--s-4); }
   .mega__feature { display: none; }
   .mega__label { margin-bottom: .35rem; padding-bottom: .35rem; }
-  .mega__list a { padding-block: .5rem; }
+  .mega__list a { min-height: 44px; padding-block: .65rem; }
   .mega__list span { font-size: .9375rem; }
 
   /* the foot holds the consultation button only — the phone/email list that
@@ -1404,7 +1413,7 @@ body.is-modal-open { overflow: hidden; }
   .nav__drawer-foot {
     display: grid;
     margin: var(--s-6) var(--nav-pad) 0;
-    padding: var(--s-5) 0 var(--s-6);
+    padding: var(--s-5) 0 calc(var(--s-6) + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--line-soft);
   }
 }
@@ -3767,7 +3776,7 @@ html:not(.js) .burger { display: none; }
 html:not(.js) .nav__curtain { display: none; }
 html:not(.js) .nav {
   position: static; width: 100%; height: auto;
-  overflow: visible; background: none; box-shadow: none;
+  overflow: visible; visibility: visible; background: none; box-shadow: none;
 }
 html:not(.js) .nav__list { display: block; padding: 0; }
 html:not(.js) .nav__item {
@@ -3785,6 +3794,7 @@ html:not(.js) .mega {
 }
 html:not(.js) .mega__inner {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  max-height: none;
   gap: var(--s-5);
   padding: var(--s-4) 0 0;
 }
@@ -4020,6 +4030,23 @@ html:not(.js) .carousel__controls { display: none; }
 @media (max-width: 939px) {
   .page-hero__media { aspect-ratio: 16 / 9; }
   .page-hero__media img { border-radius: 0; }
+  /* Staff portraits need their own frame: a landscape cover crop cuts off
+     heads. Keep the whole source visible and limit low-resolution upscaling. */
+  .page-hero__media--profile {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    aspect-ratio: auto;
+    padding-inline: var(--gutter);
+  }
+  .page-hero__media--profile img {
+    width: auto;
+    height: auto;
+    max-width: min(100%, 240px);
+    max-height: 320px;
+    object-fit: contain;
+    object-position: center bottom;
+  }
 }
 @media (min-width: 1500px) { .page-hero { margin-inline: auto; } }
 @media (max-width: 1480px) { .page-hero { margin-inline: var(--gutter); } }
@@ -4081,6 +4108,16 @@ html:not(.js) .carousel__controls { display: none; }
   color: var(--ink-2);
 }
 .page-hero__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
+@media (max-width: 599px) {
+  .page-hero__actions { flex-direction: column; align-items: stretch; margin-top: var(--s-5); }
+  .page-hero__actions .btn {
+    width: 100%;
+    min-height: 48px;
+    padding: .85rem 1rem;
+    font-size: .9375rem;
+    line-height: 1.45;
+  }
+}
 
 /* breadcrumb */
 .page-hero .crumbs ol { letter-spacing: .1em; color: var(--ink-3); }
@@ -4640,7 +4677,7 @@ html:not(.js) .carousel__controls { display: none; }
 .crumbs [aria-current="page"] { color: #fff; }
 
 /* --------------------------------------------------- split copy / media -- */
-.split { display: grid; gap: clamp(2rem, 1.2rem + 3vw, 4rem); align-items: center; }
+.split { display: grid; gap: clamp(2rem, 1.2rem + 3vw, 4rem); align-items: start; }
 /* grid items default to min-width:auto, so anything with a wide min-content —
    the 640px .compare table, a long unbroken string — stops the column
    shrinking and pushes the whole page sideways on a phone. The table's own
@@ -4653,13 +4690,250 @@ html:not(.js) .carousel__controls { display: none; }
   box-shadow: var(--sh-md);
 }
 @media (min-width: 860px) {
-  .split { grid-template-columns: 1.05fr .95fr; }
+  .split { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); }
   .split--reverse .split__copy { order: 2; }
   .split--reverse .split__media { order: 1; }
 }
 
 .badge-figure { margin-top: var(--s-6); }
 .badge-figure img { height: auto; max-width: 200px; }
+
+/* Treatment pages share compact copy/photo rows. Short copy is centred next
+   to the photograph; long copy starts at the same top edge as the image. */
+.treatment-content .split { align-items: center; }
+.treatment-content .split__copy > .section__title {
+  font-size: clamp(1.8rem, 1.2rem + 1.5vw, 2.5rem);
+  line-height: 1.2;
+  text-wrap: pretty;
+}
+.treatment-content .split__copy .prose { font-size: 1rem; line-height: 1.7; }
+.treatment-content .split__copy > .prose { margin-top: var(--s-5); }
+.treatment-content .split__copy > .prose:first-child { margin-top: 0; }
+.treatment-content .split__media { align-self: start; }
+.treatment-content .split__media:not(.badge-figure) > img {
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+@media (max-width: 859px) {
+  .treatment-content .split { gap: var(--s-6); }
+  .treatment-content .split__media:not(.badge-figure) > img { aspect-ratio: 4 / 3; }
+}
+
+/* Longer checklists and supporting copy continue below the image row. */
+.treatment-content .split--summary .split__media { align-self: center; }
+.treatment-content .split--summary .split__media > img { aspect-ratio: 4 / 3; }
+.section-details {
+  margin-top: var(--s-7);
+  padding-top: var(--s-7);
+  border-top: 1px solid var(--line-soft);
+}
+.section-details__title {
+  margin-bottom: var(--s-5);
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.section-details > .ticks { margin-top: 0; gap: var(--s-5) var(--s-8); }
+.section-details > .prose {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--s-5) var(--s-8);
+  max-width: none;
+  font-size: 1rem;
+}
+.section-details > .prose > * { margin: 0; }
+.section-details > .prose > h3 { grid-column: 1 / -1; }
+.section-details > .cta-row { margin-top: var(--s-6); }
+.section-details + .table-scroll { margin-top: var(--s-7); }
+.provider-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-soft);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--brand-900);
+}
+.provider-inline img { flex: none; width: 32px; height: auto; }
+.provider-inline__year { display: block; color: var(--ink-3); font-weight: 400; }
+@media (min-width: 760px) {
+  .section-details > .ticks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Credential introductions use a compact award card, rather than reserving
+   an entire photo column for a small badge. Supporting copy spans the row. */
+.credential-intro__top {
+  display: grid;
+  align-items: center;
+  gap: var(--s-6);
+}
+.credential-intro__lead { min-width: 0; }
+.credential-intro .section__title {
+  font-size: clamp(1.85rem, 1.25rem + 1.5vw, 2.6rem);
+  line-height: 1.2;
+  text-wrap: pretty;
+}
+.credential-intro .prose {
+  max-width: none;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.credential-intro__lead > .prose { margin-top: var(--s-5); }
+.provider-credential {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid var(--brand-100);
+  border-radius: var(--r-lg);
+  background: linear-gradient(140deg, var(--brand-50), var(--paper) 75%);
+  box-shadow: var(--sh-sm);
+}
+.provider-credential img { flex: none; width: 80px; height: auto; }
+.provider-credential figcaption { min-width: 0; }
+.provider-credential__label {
+  display: block;
+  font-size: .625rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--brand-700);
+}
+.provider-credential strong {
+  display: block;
+  margin-top: var(--s-2);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--brand-900);
+}
+.provider-credential__year {
+  display: block;
+  margin-top: var(--s-3);
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+}
+.credential-intro__details {
+  margin-top: var(--s-7);
+  padding-top: var(--s-7);
+  border-top: 1px solid var(--line-soft);
+}
+.credential-intro__details .prose { display: grid; gap: var(--s-5) var(--s-8); }
+.credential-intro__details .prose > * { margin: 0; }
+.credential-intro__details h3 { grid-column: 1 / -1; }
+.credential-intro > .cta-row { margin-top: var(--s-6); }
+@media (min-width: 900px) {
+  .credential-intro__top { grid-template-columns: minmax(0, 1fr) 330px; gap: clamp(2rem, 4vw, 4rem); }
+  .credential-intro__details .prose { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .credential-intro__details .prose > p:last-child:nth-of-type(odd) { grid-column: 1 / -1; }
+}
+@media (max-width: 359px) {
+  .provider-credential { gap: var(--s-4); padding: var(--s-4); }
+  .provider-credential img { width: 64px; }
+}
+
+/* Sleep apnea overview: symptom cards and a quieter supporting callout. */
+.sleep-treatment__head { max-width: 760px; }
+.sleep-treatment__link { margin-top: var(--s-6); }
+.sleep-treatment .split__copy > .prose > h3:first-child { margin-top: 0; }
+.sleep-signs { display: grid; gap: var(--s-4); }
+.sleep-sign {
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.sleep-sign__number {
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  margin-bottom: var(--s-5);
+  border-radius: 50%;
+  background: var(--brand-50);
+  color: var(--brand-700);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+.sleep-sign h3 { font-size: 1.05rem; line-height: 1.4; font-weight: 600; }
+.sleep-sign p { margin-top: var(--s-3); color: var(--ink-2); font-size: var(--fs-sm); }
+.sleep-impact {
+  display: grid;
+  gap: var(--s-5);
+  margin-top: var(--s-7);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-left: 3px solid var(--brand-500);
+  border-radius: 0 var(--r-lg) var(--r-lg) 0;
+  background: var(--brand-50);
+}
+.sleep-impact h3 {
+  margin-top: var(--s-3);
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.sleep-impact > p { color: var(--ink-2); }
+.sleep-treatment__locations { margin-top: var(--s-5); font-size: var(--fs-xs); color: var(--ink-2); }
+.sleep-treatment__locations a { color: var(--brand-700); text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 620px) {
+  .sleep-signs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1000px) {
+  .sleep-signs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .sleep-impact { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: center; gap: var(--s-8); }
+}
+
+/* Tracy sleep apnea page: local navigation, treatment options and office. */
+.sleep-page-nav { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; padding-top: var(--s-6); }
+.sleep-page-nav a { font-size: var(--fs-xs); font-weight: 600; color: var(--brand-700); padding-block: .5rem; border-bottom: 1px solid var(--brand-100); }
+.apnea-options { display: grid; gap: var(--s-5); }
+.apnea-option {
+  display: flex; flex-direction: column;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+  border: 1px solid var(--line-soft); border-top: 3px solid var(--brand-500);
+  border-radius: var(--r-lg); background: var(--paper);
+}
+.apnea-option h3 { margin-block: var(--s-4); font-family: var(--font-display); font-size: 1.8rem; font-weight: 500; line-height: 1.2; }
+.apnea-option > p { color: var(--ink-2); }
+.apnea-option .apnea-option__result { margin-top: auto; padding-top: var(--s-5); }
+.apnea-option__result span { display: block; margin-top: var(--s-5); padding-top: var(--s-4); border-top: 1px solid var(--line-soft); font-size: var(--fs-xs); font-weight: 600; color: var(--brand-700); }
+.sleep-followup, .sleep-faq { display: grid; gap: clamp(2rem, 4vw, 4rem); align-items: start; }
+.sleep-followup .section__title, .sleep-faq .section__title { font-size: clamp(1.85rem, 1.25rem + 1.5vw, 2.6rem); }
+.sleep-followup .prose { max-width: none; font-size: 1rem; }
+.sleep-office { padding: clamp(1.5rem, 3vw, 2.5rem); background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: var(--r-lg); }
+.sleep-office h2 { margin-top: var(--s-4); font-family: var(--font-display); font-size: 2rem; font-weight: 500; line-height: 1.2; }
+.sleep-office .prose { margin-top: var(--s-5); font-size: var(--fs-sm); }
+.sleep-office address { margin-top: var(--s-6); padding-top: var(--s-5); border-top: 1px solid var(--brand-100); font-size: var(--fs-sm); color: var(--ink-2); }
+.sleep-faq > .section__head { margin-bottom: 0; }
+.sleep-faq > .faq { margin-top: 0; min-width: 0; }
+@media (min-width: 900px) {
+  .sleep-signs--three, .apnea-options { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sleep-followup { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .sleep-faq { grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); }
+}
+
+/* Keep the free guide attached to the FAQ section with its own clear spacing. */
+.report-callout {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--s-5); margin-top: var(--s-7); padding: clamp(1.5rem, 3vw, 2.5rem);
+  border: 1px solid var(--brand-100); border-radius: var(--r-lg); background: var(--brand-50);
+}
+.report-callout > div { flex: 1 1 20rem; min-width: 0; }
+.report-callout h3 { margin-top: var(--s-2); font-family: var(--font-display); font-size: 1.85rem; font-weight: 500; line-height: 1.2; }
+.report-callout h3 + p { margin-top: var(--s-3); color: var(--ink-2); font-size: var(--fs-sm); }
+.report-callout__format { font-size: .625rem; letter-spacing: .06em; padding: .15rem .35rem; border: 1px solid currentColor; border-radius: 4px; }
+.teen-faq-section { padding-bottom: clamp(3rem, 4vw, 4rem); }
+.teen-faq-section + .testimonials { padding-top: clamp(3rem, 4vw, 4rem); }
+.promises--grid.teen-faq-grid .promise { flex: 0 1 100%; max-width: none; }
+@media (min-width: 720px) {
+  .promises--grid.teen-faq-grid .promise { flex-basis: calc((100% - var(--s-5)) / 2); }
+}
+@media (min-width: 1100px) {
+  .promises--grid.teen-faq-grid .promise { flex-basis: calc((100% - var(--s-5) * 2) / 3); }
+}
 
 /* ------------------------------------------------------ comparison table -- */
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -4797,7 +5071,7 @@ html:not(.js) .carousel__controls { display: none; }
 /* the copy takes the slack, the actions keep their natural width, so the two
    sit on one line instead of the copy pushing the button onto its own row */
 .quiz--band .quiz__inner > :first-child { flex: 1 1 26rem; min-width: 0; }
-.quiz--band .quiz__actions { margin-top: 0; flex: 0 0 auto; }
+.quiz--band .quiz__actions { margin-top: 0; flex: 0 1 auto; min-width: 0; max-width: 100%; }
 
 @media (prefers-reduced-motion: reduce) {
   .promises--grid .promise, .faq__q::after { transition: none; }
@@ -6330,6 +6604,7 @@ input[type="submit"], input[type="button"], input[type="checkbox"], input[type="
   color: var(--brand-700);
 }
 .split__copy > .prose { margin-top: var(--s-5); }
+.split__copy > .prose:first-child { margin-top: 0; }
 /* a subhead following the section title needs its own air, or the two
    display faces collide */
 .split__copy > .section__title + .split__subhead { margin-top: var(--s-4); }

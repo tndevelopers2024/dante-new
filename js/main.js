@@ -213,17 +213,20 @@
       return items.filter(function (i) { return i.classList.contains('is-open'); })[0] || null;
     }
 
-    /* ---- the open panel ----
-       A panel is a card hanging from its own item. The three-column ones are
-       wider than the room to the right of a mid-bar item, so on opening the
-       card is slid back left just far enough to end 16px inside the window. */
+    /* Centre multi-column panels on the bar; keep small panels by their
+       trigger. Clamp both edges and keep long menus scrollable on short screens. */
     function placePanel(item) {
       var panel = item && $('.mega', item);
       if (!panel) return;
-      panel.style.left = '';
-      var edge = document.documentElement.clientWidth - 16;
-      var over = panel.getBoundingClientRect().right - edge;
-      if (over > 0) panel.style.left = -Math.ceil(over) + 'px';
+      var bar = $('.header__inner', header).getBoundingClientRect();
+      var trigger = item.getBoundingClientRect();
+      var width = panel.offsetWidth;
+      var multiColumn = $('.mega__inner--split, .mega__inner--wide', panel);
+      var left = multiColumn ? bar.left + (bar.width - width) / 2 : trigger.left;
+      var rightLimit = document.documentElement.clientWidth - width - 16;
+      left = Math.max(16, Math.min(left, rightLimit));
+      panel.style.left = Math.round(left - trigger.left) + 'px';
+      panel.style.setProperty('--panel-max-height', Math.max(0, window.innerHeight - trigger.bottom - 24) + 'px');
     }
 
     function setFlyout(item) {
@@ -412,10 +415,10 @@
     });
 
     // keep focus inside the sheet while it is open
-    nav.addEventListener('keydown', function (e) {
+    header.addEventListener('keydown', function (e) {
       if (e.key !== 'Tab' || desktopNav.matches || !nav.classList.contains('is-open')) return;
       var focusables = [burger].concat($$('a[href], button:not([disabled])', nav))
-        .filter(function (el) { return el.offsetParent !== null; });
+        .filter(function (el) { return el.offsetParent !== null && getComputedStyle(el).visibility !== 'hidden'; });
       if (!focusables.length) return;
       var first = focusables[0], last = focusables[focusables.length - 1];
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -431,6 +434,14 @@
         if (open && desktopNav.matches) setFlyout(open);
       }, 120);
     });
+
+    // The floating bar changes width during scroll, even without a window resize.
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(function () {
+        var open = openItem();
+        if (open && desktopNav.matches) placePanel(open);
+      }).observe($('.header__inner', header));
+    }
 
     // lazily-loaded images inside a panel can change its height after opening
     $$('.mega img', nav).forEach(function (img) {
