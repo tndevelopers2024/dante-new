@@ -30,10 +30,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="image" href="assets/hero/home-family-kitchen.avif" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero/m-image-1.jpeg" media="(max-width: 768px)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero/home-family-kitchen.avif" media="(min-width: 769px)" fetchpriority="high">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-  <link rel="preload" as="image" href="assets/hero/home-family-kitchen.avif" fetchpriority="high">
   <link rel="stylesheet" href="css/styles.css">
   <style>
     html:not(.js) #preloader {
@@ -292,10 +292,14 @@
 
         <!-- slide 1 — the practice ............................................. -->
         <article class="hero__slide is-active" data-banner-slide data-tone="light" role="group"
-          aria-roledescription="slide">
+          aria-roledescription="slide" data-crop="subject">
           <div class="hero__still" aria-hidden="true">
-            <img src="assets/hero/home-family-kitchen.avif" alt="" width="1672" height="941" fetchpriority="high"
-              decoding="sync">
+            <picture>
+              <source media="(max-width: 768px)" srcset="assets/hero/m-image-1.jpeg" width="778" height="1280">
+              <source media="(min-width: 769px)" srcset="assets/hero/home-family-kitchen.avif" width="1672" height="941">
+              <img src="assets/hero/home-family-kitchen.avif" alt="" width="1672" height="941" fetchpriority="high"
+                decoding="sync">
+            </picture>
           </div>
           <div class="hero__scrim" aria-hidden="true"></div>
           <div class="hero__overlay">
@@ -323,7 +327,11 @@
         <article class="hero__slide" data-banner-slide data-tone="light" role="group" aria-roledescription="slide"
           data-crop="subject" style="--still-x-sm: 62%">
           <div class="hero__still" aria-hidden="true">
-            <img src="assets/hero/banner-img-2.avif" alt="" width="1536" height="1024" loading="lazy" decoding="async">
+            <picture>
+              <source media="(max-width: 768px)" srcset="assets/hero/m-image-2.jpeg" width="829" height="1280">
+              <source media="(min-width: 769px)" srcset="assets/hero/banner-img-2.avif" width="1536" height="1024">
+              <img src="assets/hero/banner-img-2.avif" alt="" width="1536" height="1024" loading="lazy" decoding="async">
+            </picture>
           </div>
           <div class="hero__scrim" aria-hidden="true"></div>
           <div class="hero__overlay">
@@ -352,7 +360,11 @@
         <article class="hero__slide" data-banner-slide data-tone="light" role="group" aria-roledescription="slide"
           data-crop="subject" style="--still-x-sm: 66%">
           <div class="hero__still" aria-hidden="true">
-            <img src="assets/hero/banner-img-4.avif" alt="" width="1536" height="1024" loading="lazy" decoding="async">
+            <picture>
+              <source media="(max-width: 768px)" srcset="assets/hero/m-image-3.jpeg" width="904" height="1280">
+              <source media="(min-width: 769px)" srcset="assets/hero/banner-img-4.avif" width="1536" height="1024">
+              <img src="assets/hero/banner-img-4.avif" alt="" width="1536" height="1024" loading="lazy" decoding="async">
+            </picture>
           </div>
           <div class="hero__scrim" aria-hidden="true"></div>
           <div class="hero__overlay">

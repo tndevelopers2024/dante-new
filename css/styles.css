@@ -1443,6 +1443,9 @@ body.is-modal-open { overflow: hidden; }
   position: absolute; inset: 0; z-index: 0;
   overflow: hidden;
 }
+.hero__still picture {
+  display: contents;
+}
 .hero__still img {
   width: 100%; height: 100%;
   object-fit: cover;
@@ -1461,17 +1464,21 @@ body.is-modal-open { overflow: hidden; }
    the copy no longer has an empty corner to sit in. Slides framed loosely
    enough to survive the default crop are left alone — the veil would only
    wash out a picture that was already readable. */
-@media (max-width: 700px) {
+@media (max-width: 768px) {
+  .hero__still img,
   .hero__slide[data-crop="subject"] .hero__still img {
-    object-position: var(--still-x-sm, 60%) center;
+    object-position: center center;
   }
+  .hero__slide .hero__scrim,
+  .hero__slide:not([data-tone="dark"]) .hero__scrim,
   .hero__slide[data-crop="subject"]:not([data-tone="dark"]) .hero__scrim {
     background: linear-gradient(180deg, rgba(255, 255, 255, .93) 0%, rgba(255, 255, 255, .82) 44%,
-                                        rgba(255, 255, 255, .66) 64%, rgba(255, 255, 255, .86) 100%);
+                                        rgba(255, 255, 255, .66) 64%, rgba(255, 255, 255, .86) 100%) !important;
   }
+  .hero__slide[data-tone="dark"] .hero__scrim,
   .hero__slide[data-crop="subject"][data-tone="dark"] .hero__scrim {
     background: linear-gradient(180deg, rgba(9, 18, 26, .86) 0%, rgba(9, 18, 26, .68) 44%,
-                                        rgba(9, 18, 26, .5) 64%, rgba(9, 18, 26, .78) 100%);
+                                        rgba(9, 18, 26, .5) 64%, rgba(9, 18, 26, .78) 100%) !important;
   }
 }
 
@@ -4035,19 +4042,23 @@ html:not(.js) .carousel__controls { display: none; }
   .page-hero__media img { border-radius: 0; }
   /* Staff portraits need their own frame: a landscape cover crop cuts off
      heads. Keep the whole source visible and limit low-resolution upscaling. */
-  .page-hero__media--profile {
+  .page-hero__media--profile,
+  .page-hero__media:has(img[src*="braces-tracy-01"]),
+  .page-hero__media:has(img[src*="dr-dante"]) {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    aspect-ratio: auto;
+    aspect-ratio: auto !important;
     padding-inline: var(--gutter);
   }
-  .page-hero__media--profile img {
+  .page-hero__media--profile img,
+  .page-hero__media img[src*="braces-tracy-01"],
+  .page-hero__media img[src*="dr-dante"] {
     width: auto;
     height: auto;
-    max-width: min(100%, 240px);
-    max-height: 320px;
-    object-fit: contain;
+    max-width: min(100%, 280px);
+    max-height: 420px;
+    object-fit: contain !important;
     object-position: center bottom;
   }
 }
@@ -4713,14 +4724,42 @@ html:not(.js) .carousel__controls { display: none; }
 .treatment-content .split__copy > .prose { margin-top: var(--s-5); }
 .treatment-content .split__copy > .prose:first-child { margin-top: 0; }
 .treatment-content .split__media { align-self: start; }
-.treatment-content .split__media:not(.badge-figure) > img {
+.treatment-content .split__media:not(.badge-figure):not(.split__media--profile):not(:has(img[src*="braces-tracy-01"])):not(:has(img[src*="dr-dante"])) > img:not([src*="braces-tracy-01"]):not([src*="dr-dante"]) {
   aspect-ratio: 1;
   object-fit: cover;
 }
 @media (max-width: 859px) {
   .treatment-content .split { gap: var(--s-6); }
-  .treatment-content .split__media:not(.badge-figure) > img { aspect-ratio: 4 / 3; }
+  .treatment-content .split__media:not(.badge-figure):not(.split__media--profile):not(:has(img[src*="braces-tracy-01"])):not(:has(img[src*="dr-dante"])) > img:not([src*="braces-tracy-01"]):not([src*="dr-dante"]) { aspect-ratio: 4 / 3; }
 }
+
+/* Doctor portrait in split section — preserve full figure */
+.treatment-content .split__media--profile > img,
+.treatment-content .split__media:has(img[src*="braces-tracy-01"]) > img,
+.treatment-content .split__media:has(img[src*="dr-dante"]) > img,
+.treatment-content .split__media > img[src*="braces-tracy-01"],
+.treatment-content .split__media > img[src*="dr-dante"],
+.split__media--profile > img,
+.split__media:has(img[src*="braces-tracy-01"]) > img,
+.split__media:has(img[src*="dr-dante"]) > img,
+.split__media > img[src*="braces-tracy-01"],
+.split__media > img[src*="dr-dante"] {
+  aspect-ratio: 4 / 5 !important;
+  object-fit: contain !important;
+  object-position: bottom center !important;
+  background: linear-gradient(168deg, var(--brand-100) 0%, var(--brand-50) 100%) !important;
+}
+
+@media (max-width: 859px) {
+  .split__media--profile,
+  .split__media:has(img[src*="braces-tracy-01"]),
+  .split__media:has(img[src*="dr-dante"]) {
+    width: 100%;
+    max-width: min(340px, 100%);
+    margin-inline: auto;
+  }
+}
+
 
 /* Longer checklists and supporting copy continue below the image row. */
 .treatment-content .split--summary .split__media { align-self: center; }
@@ -6580,6 +6619,14 @@ input[type="submit"], input[type="button"], input[type="checkbox"], input[type="
   border-radius: var(--r-lg);
   box-shadow: var(--sh-lg);
 }
+@media (max-width: 859px) {
+  .founder-portrait img {
+    aspect-ratio: auto;
+    height: auto;
+    object-fit: unset;
+    object-position: unset;
+  }
+}
 .founder-portrait figcaption {
   padding-left: var(--s-4);
   border-left: 2px solid var(--sand-500);
@@ -7653,3 +7700,420 @@ p.cred-group { margin-top: var(--s-6); }
 @media (prefers-reduced-motion: reduce) {
   .cursor { display: none !important; }
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVE IMPROVEMENTS
+   Comprehensive fixes for small screens (≤767px and ≤480px).
+   Organised by component, cascading from 767px down to 360px.
+   ========================================================================== */
+
+/* ---- global overflow guard ---- */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* ---- footer — prevent horizontal overflow on narrow viewports ---- */
+@media (max-width: 600px) {
+  .footer {
+    margin: .5rem;
+    border-radius: var(--r-lg);
+  }
+  .footer__top {
+    grid-template-columns: 1fr;
+  }
+  .footer__logo { width: clamp(140px, 50vw, 200px); }
+  .footer__offices { grid-template-columns: 1fr; }
+  .footer__accred {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .footer__accred img { height: 36px; }
+  .footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-3);
+  }
+  .footer__legal { flex-wrap: wrap; }
+}
+
+/* ---- hero — stack CTA buttons on mobile ---- */
+@media (max-width: 640px) {
+  .hero__cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero__cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero__headline {
+    max-width: 20ch;
+    font-size: clamp(2.2rem, 8vw, 3.5rem);
+  }
+  .hero__sub { max-width: 100%; }
+}
+
+/* ---- mission quote — prevent oversized decorative glyph from overflowing ---- */
+@media (max-width: 600px) {
+  .mission__quote::before {
+    font-size: 6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: .12;
+  }
+  .mission {
+    overflow: hidden;
+    padding-inline: var(--gutter);
+  }
+}
+
+/* ---- before/after results section ---- */
+@media (max-width: 700px) {
+  .ba {
+    grid-template-columns: 1fr;
+  }
+  .ba__stage { aspect-ratio: 4 / 3; }
+  .ba__thumbs { grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+  .ba__cred {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--s-4);
+    padding: var(--s-4);
+  }
+  .ba__cred strong {
+    margin-bottom: 2px;
+  }
+}
+
+/* ---- founder section ---- */
+@media (max-width: 700px) {
+  .founder__inner {
+    grid-template-columns: 1fr;
+  }
+  .founder__portrait img {
+    width: min(220px, 80%);
+  }
+  .founder__facts strong { min-width: 4rem; font-size: 1.25rem; }
+}
+
+/* ---- reach / service area chips ---- */
+@media (max-width: 480px) {
+  .reach__areas {
+    gap: .4rem;
+  }
+  .reach__areas li {
+    font-size: .7rem;
+    padding: .35rem .75rem;
+  }
+}
+
+/* ---- benefits cards grid ---- */
+@media (max-width: 500px) {
+  .cards--3 {
+    grid-template-columns: 1fr;
+  }
+  .cards--4 {
+    grid-template-columns: 1fr;
+  }
+  .benefit { padding: var(--s-5); }
+}
+
+/* ---- report / book sections — stack and center media ---- */
+@media (max-width: 700px) {
+  .report__inner,
+  .book__inner {
+    grid-template-columns: 1fr;
+  }
+  .report__media,
+  .book__media {
+    width: min(280px, 80%);
+    margin-inline: auto;
+  }
+  .report__actions,
+  .book__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .report__actions .btn,
+  .book__actions .btn { width: 100%; justify-content: center; }
+}
+
+/* ---- right-for-you widget ---- */
+@media (max-width: 700px) {
+  .rfy__inner { grid-template-columns: 1fr; }
+  .rfy__card { max-width: 100%; }
+}
+
+/* ---- visit (office tabs + map) ---- */
+@media (max-width: 500px) {
+  .visit__tabs {
+    flex-direction: column;
+  }
+  .visit__tab {
+    border-bottom: 1px solid var(--line-soft);
+    border-right: 0;
+    text-align: left;
+  }
+  .visit__tab.is-active {
+    border-bottom-color: var(--brand-700);
+  }
+  .visit__map { min-height: 220px; height: 220px; }
+  .visit__actions {
+    flex-direction: column;
+  }
+  .visit__actions .btn { width: 100%; justify-content: center; }
+}
+
+/* ---- appointment section ---- */
+@media (max-width: 700px) {
+  .appointment__inner { grid-template-columns: 1fr; }
+  .appointment__alt { grid-template-columns: 1fr; }
+  .form__grid { grid-template-columns: 1fr; }
+  .form__foot { flex-direction: column; align-items: stretch; }
+  .form__foot .btn { width: 100%; justify-content: center; }
+}
+
+/* ---- consultation modal on very small screens ---- */
+@media (max-width: 400px) {
+  .consultation-modal {
+    padding: .5rem;
+  }
+  .consultation-modal__panel {
+    border-radius: var(--r-md);
+  }
+  .consultation-modal__aside { padding: 1.15rem 1rem 1.1rem; }
+  .consultation-modal__body { padding: 1.1rem .9rem 1.4rem; }
+  .consultation-modal__title { font-size: 1.4rem; }
+}
+
+/* ---- quiz section ---- */
+@media (max-width: 700px) {
+  .quiz__inner { grid-template-columns: 1fr; }
+  .quiz__media { display: none; } /* hide decorative image on small screens */
+  .quiz__actions { flex-direction: column; align-items: stretch; }
+  .quiz__actions .btn { width: 100%; justify-content: center; }
+}
+
+/* ---- testimonials (wall + carousel) ---- */
+@media (max-width: 480px) {
+  .wall .quote {
+    flex-basis: clamp(14rem, 80vw, 18rem);
+  }
+  .wall-panel__badges {
+    gap: 1rem;
+  }
+  .wall-panel__badges img { height: 28px; }
+  .proof-pill {
+    font-size: .72rem;
+    padding: .28rem .65rem;
+  }
+}
+
+/* ---- video section ---- */
+@media (max-width: 700px) {
+  .video__inner { grid-template-columns: 1fr; }
+  .video__play { width: 64px; height: 64px; }
+}
+
+/* ---- newsletter — keep input and button stacked on small screens ---- */
+@media (max-width: 479px) {
+  .newsletter__form {
+    flex-direction: column;
+  }
+  .newsletter__form .field__input,
+  .newsletter__form .btn { width: 100%; }
+}
+
+/* ---- section headings — ensure long words break on tiny screens ---- */
+@media (max-width: 420px) {
+  .section__title,
+  .hero__headline,
+  p.hero__headline,
+  .reach__title,
+  .quiz__title,
+  .book__title,
+  .video__title,
+  .founder__title,
+  .newsletter__title {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
+
+/* ---- page hero (interior pages) ---- */
+@media (max-width: 600px) {
+  .page-hero {
+    margin-top: calc(var(--header-h) + var(--header-float) + .5rem);
+    margin-inline: .5rem;
+    border-radius: var(--r-md);
+  }
+  .page-hero__inner { padding-block: 1.75rem; }
+  .page-hero__title { font-size: clamp(1.75rem, 6.5vw, 2.4rem); }
+  .page-hero__media:not(.page-hero__media--profile) { aspect-ratio: 3 / 2; }
+  .page-hero__media--profile,
+  .page-hero__media:has(img[src*="braces-tracy-01"]),
+  .page-hero__media:has(img[src*="dr-dante"]) {
+    aspect-ratio: auto !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+  .page-hero__media--profile img,
+  .page-hero__media img[src*="braces-tracy-01"],
+  .page-hero__media img[src*="dr-dante"] {
+    width: auto;
+    height: auto;
+    max-width: min(100%, 280px);
+    max-height: 420px;
+    object-fit: contain !important;
+    object-position: center bottom;
+  }
+}
+
+/* ---- stat band (about / orthodontists pages) ---- */
+@media (max-width: 500px) {
+  .stat-band__card {
+    padding: 1.5rem 1rem;
+  }
+  .stat-band__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-5) var(--s-4);
+  }
+}
+
+/* ---- blog filter bar ---- */
+@media (max-width: 600px) {
+  .blog-filter-bar {
+    width: 100%;
+    border-radius: var(--r-lg);
+    justify-content: flex-start;
+  }
+  .blog-filter-btn {
+    font-size: .72rem;
+    padding: .4rem .8rem;
+  }
+}
+
+/* ---- before-after gallery page — case cards ---- */
+@media (max-width: 480px) {
+  .gallery-filters { gap: .4rem; }
+  .gallery-filter-btn { font-size: .72rem; padding: .5rem .9rem; }
+}
+
+/* ---- team lineup / portrait grids ---- */
+@media (max-width: 480px) {
+  .portraits {
+    grid-template-columns: repeat(2, 1fr);
+    gap: .75rem;
+  }
+  .team-lineup { grid-template-columns: 1fr; }
+}
+
+/* ---- contact page ---- */
+@media (max-width: 480px) {
+  .contact-location-switch {
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: var(--r-lg);
+    padding: .35rem;
+  }
+  .contact-location-switch__btn {
+    padding: .5rem 1rem;
+    font-size: var(--fs-xs);
+  }
+  .contact-office-box { padding: 1.25rem 1rem; }
+  .contact-hero-cards { grid-template-columns: 1fr; }
+}
+
+/* ---- WhatsApp FAB — tighten on very small screens ---- */
+@media (max-width: 400px) {
+  .whatsapp-fab-wrap {
+    right: .65rem;
+    bottom: .65rem;
+  }
+  .to-top {
+    right: .65rem;
+    bottom: calc(.65rem + 72px);
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ---- header bar — tighter padding on very small screens ---- */
+@media (max-width: 380px) {
+  .header__inner {
+    padding-inline: .75rem;
+  }
+  .header__logo {
+    width: clamp(110px, 35vw, 140px);
+  }
+}
+
+/* ---- overall section vertical padding reduction on tiny screens ---- */
+@media (max-width: 400px) {
+  :root {
+    --section-y: clamp(2.5rem, 1.8rem + 3.5vw, 5rem);
+    --gutter: 1rem;
+  }
+}
+
+/* ---- promises rail — cards sized well on small phones ---- */
+@media (max-width: 380px) {
+  .section--promises .promise,
+  .section--promises .promise:first-child,
+  .section--promises .promise:last-child {
+    flex: 0 0 clamp(220px, 88vw, 280px);
+  }
+}
+
+/* ---- hours grid ---- */
+@media (max-width: 480px) {
+  .hours { padding: 1.25rem 1rem; }
+  .hours__list { grid-template-columns: 1fr; }
+}
+
+/* ---- shell — ensure no child breaks viewport ---- */
+.shell > * { min-width: 0; }
+
+/* ---- visit / appointment map caption / address ---- */
+@media (max-width: 480px) {
+  .visit__address { font-size: .9375rem; }
+  .visit__office { font-size: 1.25rem; }
+  .visit__info { padding: 1.25rem 1rem; }
+}
+
+/* ---- FAQ on mobile ---- */
+@media (max-width: 480px) {
+  .faq__q { padding: var(--s-4); font-size: .9375rem; }
+  .faq__a { padding: 0 var(--s-4) var(--s-4); }
+}
+
+/* ---- promise intents (pathways) — improve card size ---- */
+@media (max-width: 400px) {
+  .pathways .cards.intents .intent {
+    flex: 0 0 92%;
+    max-width: 300px;
+  }
+}
+
+/* ---- hero foot controls ---- */
+@media (max-width: 400px) {
+  .hero__arrow {
+    width: 36px;
+    height: 36px;
+  }
+  .hero__dot.is-active { width: 36px; }
+}
+
+/* ---- radios on very small screens ---- */
+@media (max-width: 479px) {
+  .radios { grid-template-columns: 1fr; }
+}
+
+/* ---- featured blog post ---- */
+@media (max-width: 600px) {
+  .featured-post { grid-template-columns: 1fr; }
+  .featured-post__visual { display: none; }
+}
+
