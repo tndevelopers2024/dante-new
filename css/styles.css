@@ -2257,16 +2257,19 @@ p.hero__headline {
   .founder__letter-collapsible {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows 0.35s var(--e-soft), opacity 0.3s var(--e-out);
+    transition: grid-template-rows 0.35s var(--e-soft), opacity 0.3s var(--e-out), visibility 0.35s;
     opacity: 0;
+    visibility: hidden;
     overflow: hidden;
   }
-  .founder__letter-collapsible > * {
+  .founder__letter-content {
     min-height: 0;
+    overflow: hidden;
   }
   .founder__letter-collapsible.is-expanded {
     grid-template-rows: 1fr;
     opacity: 1;
+    visibility: visible;
     margin-top: var(--s-5);
   }
   .founder__toggle-wrap {

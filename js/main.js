@@ -1479,6 +1479,11 @@
       if (label) {
         label.textContent = nextState ? 'Read Less' : 'Read More';
       }
+      if (nextState) {
+        $$('[data-reveal]', collapseEl).forEach(function (el) {
+          el.classList.add('is-in');
+        });
+      }
     });
   })();
 
