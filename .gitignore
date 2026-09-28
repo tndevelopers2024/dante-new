@@ -2,3 +2,4 @@
 .~lock.*#
 .vscode/
 trash/
+node_modules/

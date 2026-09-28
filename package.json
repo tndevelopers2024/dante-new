@@ -1,0 +1,16 @@
+{
+  "name": "dante-gonzales-orthodontics",
+  "version": "1.0.0",
+  "description": "Dante Gonzales Orthodontics Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Build complete'"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
