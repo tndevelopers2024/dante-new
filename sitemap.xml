@@ -1,378 +1,410 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
   <url>
-    <loc>https://www.drdantegonzales.com/meet-our-founder.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>1.0000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/accelerated-treatment.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/index.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/before-after.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/about-us.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/why-dante-gonzales.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/meet-our-founder.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/meet-our-orthodontists.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/braces-in-dublin-ca.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/meet-our-dublin-team.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/braces-in-tracy-ca.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/meet-our-tracy-team.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/braces.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/braces-and-invisalign.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/contact-dublin.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/invisalign.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/braces-and-invisalign.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/braces.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/about-us.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/invisalign-teen.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/invisalign-teen.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/surgical-orthodontics.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/impression-techniques.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/braces-in-dublin-ca.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>1.00</priority>
+       <loc>https://www.drdantegonzales.com/braces-in-tracy-ca.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/invisalign-quiz.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/sleep-apnea-treatment.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/invisalign.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/sleep-apnea-dublin.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/meet-our-dublin-team.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/sleep-apnea-tracy.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/meet-our-orthodontists.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/why-dante-gonzales.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/meet-our-tracy-team.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/before-after.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/sleep-apnea-dublin.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/blog.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/sleep-apnea-treatment.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/assets/docs/teledentistry-consultation-dr-gonzales.pdf</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/sleep-apnea-tracy.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/impression-techniques.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/surgical-orthodontics.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/contact-dublin.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/surgical-orthodontist.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/contact-tracy.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/contact-tracy.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.80</priority>
+       <loc>https://www.drdantegonzales.com/invisalign-quiz.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/botox-for-bruxism.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/assets/docs/top-10-things-to-know-about-your-orthodontist.pdf</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/botox-for-tmj.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/sitemap.xml</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.8000</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/botox-for-tmj-cost.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/accelerated-treatment.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/braces-create-small-gap-between-front-teeth-is-it-normal.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/how-to-brush-teeth-with-braces.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/braces-vs-invisalign.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/how-much-do-braces-cost.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-braces-fix-an-overbite-permanently.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/assets/docs/braces-report-dr-gonzales.pdf</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-invisalign-fix-an-overbite.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/assets/docs/invisalign-free-report.pdf</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-invisalign-fix-an-underbite.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/whats-the-best-age-for-braces.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-invisalign-fix-protruding-front-teeth.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/how-long-do-you-have-to-wear-a-retainer.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-orthodontic-treatment-help-sleep-apnea.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/is-invisalign-worth-it-for-adults.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-tmj-dysfuntion-cause-ear-pain.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/invisalign-treatment-for-adults-cost-timeline.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-you-chew-gum-with-invisalign.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/does-invisalign-work-for-crowded-teeth.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-you-chew-gum-with-invisalign-without-affecting-your-treatment.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/tmj-treatment-options.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-you-drink-with-invisalign.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/botox-for-tmj-cost.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-you-eat-with-invisalign.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/botox-for-bruxism.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-you-get-braces-with-missing-teeth-heres-what-orthodontists-say.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/tmj-headaches.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-you-really-straighten-teeth-without-braces.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/botox-for-tmj.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/can-you-wear-invisalign-only-at-night.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/what-is-tmj-disorder.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/crowded-teeth-before-and-after.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/invisalign-for-crowded-teeth.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/do-braces-hurt-how-long-the-pain-lasts-and-how-to-cope.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/invisalign-for-adults.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/do-braces-or-invisalign-hurt-what-to-expect-during-your-first-week.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-you-wear-invisalign-only-at-night.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/does-invisalign-hurt.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-invisalign-fix-an-overbite.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/does-invisalign-hurt-more-than-braces.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-invisalign-fix-an-underbite.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/does-invisalign-work-for-crowded-teeth.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/does-invisalign-hurt-more-than-braces.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/how-braces-can-correct-crooked-teeth-a-complete-guide.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-orthodontic-treatment-help-sleep-apnea.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/how-braces-can-lead-to-white-marks-and-what-you-can-do-about-it.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-you-drink-with-invisalign.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/how-long-do-you-have-to-wear-a-retainer.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/what-is-sleep-apnea-caused-by.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/how-much-do-braces-cost.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/how-to-clean-invisalign-properly.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/how-to-brush-teeth-with-braces.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-you-eat-with-invisalign.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/how-to-clean-invisalign-properly.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-you-chew-gum-with-invisalign.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/how-to-fix-a-gap-between-teeth-treatment-options-compared.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/does-invisalign-hurt.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/invisalign-for-adults.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/jaw-pain-on-one-side.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/invisalign-for-crowded-teeth.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/what-is-teeth-protrusion.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/is-invisalign-worth-it-for-adults.html</loc>
-    <lastmod>2026-09-04T00:00:00+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/what-is-malocclusion-of-teeth.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/invisalign-treatment-for-adults-cost-timeline.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/what-causes-crowded-teeth-and-how-dentists-fix-them.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/invisalign-vs-braces-choosing-the-right-option-for-your-smile.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/the-best-techniques-to-floss-teeth-with-braces-effectively.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/jaw-pain-on-one-side.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/how-braces-can-lead-to-white-marks-and-what-you-can-do-about-it.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/overbite-vs-underbite.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/how-braces-can-correct-crooked-teeth-a-complete-guide.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/the-best-solutions-on-how-to-fix-crowded-teeth-effectively.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/how-to-fix-a-gap-between-teeth-treatment-options-compared.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/the-best-techniques-to-floss-teeth-with-braces-effectively.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-you-get-braces-with-missing-teeth-heres-what-orthodontists-say.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/tmj-headaches.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/do-braces-or-invisalign-hurt-what-to-expect-during-your-first-week.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/tmj-treatment-options.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/braces-create-small-gap-between-front-teeth-is-it-normal.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/what-causes-crowded-teeth-and-how-dentists-fix-them.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-you-really-straighten-teeth-without-braces.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/what-is-a-deep-bite.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/do-braces-hurt-how-long-the-pain-lasts-and-how-to-cope.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/what-is-an-underbite.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/invisalign-vs-braces-choosing-the-right-option-for-your-smile.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/what-is-malocclusion-of-teeth.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/the-best-solutions-on-how-to-fix-crowded-teeth-effectively.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/what-is-sleep-apnea-caused-by.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-you-chew-gum-with-invisalign-without-affecting-your-treatment.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/what-is-teeth-protrusion.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/can-tmj-dysfuntion-cause-ear-pain.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/what-is-tmj-disorder.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/what-is-an-underbite.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
   </url>
   <url>
-    <loc>https://www.drdantegonzales.com/blog/whats-the-best-age-for-braces.html</loc>
-    <lastmod>2026-05-20T07:01:54+00:00</lastmod>
-    <priority>0.64</priority>
+       <loc>https://www.drdantegonzales.com/blog/what-is-a-deep-bite.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://www.drdantegonzales.com/blog/can-braces-fix-an-overbite-permanently.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://www.drdantegonzales.com/blog/can-invisalign-fix-protruding-front-teeth.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://www.drdantegonzales.com/blog/overbite-vs-underbite.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://www.drdantegonzales.com/blog/crowded-teeth-before-and-after.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://www.drdantegonzales.com/blog/braces-vs-invisalign.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.6400</priority>
+  </url>
+  <url>
+       <loc>https://www.drdantegonzales.com/surgical-orthodontist.html</loc>
+       <lastmod>2026-09-28T08:47:36+00:00</lastmod>
+       <priority>0.5120</priority>
   </url>
 </urlset>
