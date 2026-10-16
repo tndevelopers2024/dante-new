@@ -18,9 +18,24 @@ ErrorDocument 404 /404.html
 
 # Serve index.html for a bare directory request.
 DirectoryIndex index.html
+Options -MultiViews
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+
+  # SEO audit: consolidated content and canonical homepage.
+  RewriteRule ^index(?:\.(html|php))?/?$ / [R=301,L,NE]
+  RewriteRule ^blog/is\-invisalign\-worth\-it\-for\-adults(?:\.(html|php))?/?$ /blog/invisalign-for-adults.html [R=301,L,NE]
+  RewriteRule ^blog/invisalign\-treatment\-for\-adults\-cost\-timeline(?:\.(html|php))?/?$ /blog/invisalign-for-adults.html [R=301,L,NE]
+  RewriteRule ^blog/can\-you\-chew\-gum\-with\-invisalign\-without\-affecting\-your\-treatment(?:\.(html|php))?/?$ /blog/can-you-chew-gum-with-invisalign.html [R=301,L,NE]
+  RewriteRule ^blog/does\-invisalign\-work\-for\-crowded\-teeth(?:\.(html|php))?/?$ /blog/invisalign-for-crowded-teeth.html [R=301,L,NE]
+  RewriteRule ^blog/invisalign\-vs\-braces\-choosing\-the\-right\-option\-for\-your\-smile(?:\.(html|php))?/?$ /blog/braces-vs-invisalign.html [R=301,L,NE]
+  RewriteRule ^surgical\-orthodontist(?:\.(html|php))?/?$ /surgical-orthodontics.html [R=301,L,NE]
+  RewriteRule ^blog/can\-tmj\-dysfuntion\-cause\-ear\-pain(?:\.(html|php))?/?$ /blog/can-tmj-dysfunction-cause-ear-pain.html [R=301,L,NE]
+  # Redirect only extensionless paths that resolve to a real HTML document.
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^([^.?]+?)/?$ /$1.html [R=301,L,NE]
+
 
   # ---------------------------------------------------------------- host ----
   # REVIEW THIS BLOCK BEFORE DEPLOY.
@@ -294,11 +309,6 @@ DirectoryIndex index.html
   # differed only in its meta title - so it still points at the surviving article.
   RewriteRule ^blog/best-age-for-braces\.(php|html)$ /blog/whats-the-best-age-for-braces.html [R=301,L,NE]
 
-  # is-invisalign-worth-it-for-adults was previously folded into the cost/timeline
-  # post. It now exists as its own page, so that consolidation redirect is gone and
-  # the generic .php -> .html rule below carries the legacy URL to it.
-  # NOTE: this page and invisalign-treatment-for-adults-cost-timeline.html share the
-  # same body copy. They compete for the same query until one is rewritten.
 
   # Every other legacy page: same slug, new extension. The condition means a
   # .php URL with no matching .html falls through to the 404 instead of
@@ -365,6 +375,7 @@ DirectoryIndex index.html
   </FilesMatch>
 
   # --------------------------------------------------------------- security --
+  Header always set Strict-Transport-Security "max-age=31536000"
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set X-Frame-Options "SAMEORIGIN"

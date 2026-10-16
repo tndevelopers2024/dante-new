@@ -11,6 +11,7 @@
   'use strict';
   if (typeof window.Lenis !== 'function') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)').matches) return;
 
   /* Lenis has two scroll models and they feel completely different.
 
@@ -106,7 +107,7 @@
     // from here.
 
     // One full pass of the arch: teeth in, straighten, archwire through.
-    var LOAD_DURATION = 2800;
+    var LOAD_DURATION = 0;
     window.setTimeout(function () {
       preloader.classList.add('is-done');
       window.setTimeout(function () {
@@ -491,7 +492,7 @@
           '<img class="consultation-modal__logo" src="' + assetBase + 'assets/brand/logo-white.png" alt="Dante Gonzales Orthodontics" width="387" height="86" loading="lazy" decoding="async">',
           '<p class="consultation-modal__rating">' + stars + '<span>5-star rated &middot; 12,000+ smiles since 1998</span></p>',
           '<p class="consultation-modal__eyebrow">Complimentary consultation</p>',
-          '<h2 class="consultation-modal__title" id="consultation-modal-title">Your new smile starts here</h2>',
+          '<p class="consultation-modal__title" id="consultation-modal-title">Your new smile starts here</p>',
           '<p class="consultation-modal__lede">Tell us a little about yourself and our team will call to find a time that suits you &mdash; no cost, no obligation.</p>',
           '<ul class="consultation-modal__points">',
             '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>Complimentary exam &amp; 3D scan</li>',
@@ -1215,27 +1216,6 @@
         }
         if (summary) { summary.hidden = true; summary.textContent = ''; }
       });
-    });
-  })();
-
-  /* ---------------------------------------------------------- newsletter */
-  (function newsletter() {
-    var form = $('[data-newsletter]');
-    if (!form) return;
-    var status = $('[data-newsletter-status]');
-    var input = form.elements.email;
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var value = (input.value || '').trim();
-      var ok = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(value);
-      if (!status) return;
-      status.classList.toggle('is-error', !ok);
-      status.textContent = ok
-        ? 'Thank you — we will be in touch about your complimentary Gonzales Smile Assessment.'
-        : 'Please enter a valid email address.';
-      if (ok) form.reset();
-      else input.focus();
     });
   })();
 

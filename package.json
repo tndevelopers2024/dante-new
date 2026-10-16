@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "test": "python3 scripts/check-seo.py && node --test tests/seo.test.js",
     "build": "echo 'Build complete'"
   },
   "dependencies": {
