@@ -3,3 +3,5 @@
 .vscode/
 trash/
 node_modules/
+public/
+.vercel/

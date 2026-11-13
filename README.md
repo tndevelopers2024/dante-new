@@ -61,6 +61,13 @@ change the nav or footer, edit it across all files (find-and-replace).
 
 ## Notes for deployment
 
+* **Vercel:** `npm run build` creates `public/` with the HTML pages, assets,
+  styles, scripts, sitemap, robots file and Google verification file.
+  `vercel.json` selects this output directory and keeps `.html` URLs.
+  Generated files are ignored by Git. Node.js is pinned to 24.x.
+  This is a static deployment; Vercel does not run Express or `.htaccess`.
+  The Node and Apache redirect rules require equivalent Vercel routing rules
+  if Vercel is used for the production domain.
 * **Appointment delivery still needs the existing backend.** The appointment,
   quiz and modal forms post to `contact-form1.php`. That handler is absent
   from this repository, and Express cannot execute PHP. Retain and verify

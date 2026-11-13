@@ -6,12 +6,12 @@
   "scripts": {
     "start": "node server.js",
     "test": "python3 scripts/check-seo.py && node --test tests/seo.test.js",
-    "build": "echo 'Build complete'"
+    "build": "node scripts/build-static.js"
   },
   "dependencies": {
     "express": "^4.19.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": "24.x"
   }
 }
