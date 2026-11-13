@@ -8134,6 +8134,29 @@ html, body {
 .hero__trust { font-size: .875rem; font-weight: 600; margin-block: 1rem; }
 .hero__calls { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1rem; }
 .hero__calls a { display: inline-flex; align-items: center; min-height: 44px; font-size: .875rem; font-weight: 600; text-decoration: underline; text-underline-offset: .2em; }
+.hero__promo {
+  margin-top: .75rem;
+  max-width: 380px;
+  width: 100%;
+}
+.hero__promo a {
+  display: block;
+  border-radius: var(--r-md, 12px);
+  overflow: hidden;
+  border: 1px solid rgba(20, 35, 46, .08);
+  box-shadow: 0 4px 14px rgba(20, 35, 46, .08);
+  transition: transform var(--t-fast) var(--e-out), box-shadow var(--t-fast) var(--e-out);
+}
+.hero__promo a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(20, 35, 46, .14);
+}
+.hero__promo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-md, 12px);
+}
 .mobile-actions { display: none; }
 .audit-related { padding: 1.5rem; margin-block: 2rem; border: 1px solid var(--line); border-radius: var(--r-md); }
 .audit-related a { text-decoration: underline; text-underline-offset: .2em; }
@@ -8150,6 +8173,10 @@ html, body {
   .hero--static .hero__sub { font-size: 1rem; max-width: 36ch; }
   .hero--static .hero__trust { max-width: 32ch; }
   .hero--static .hero__calls { display: none; }
+  .hero__promo {
+    margin-top: 1.25rem;
+    max-width: min(350px, 100%);
+  }
   .mobile-actions {
     position: fixed; z-index: 350; bottom: 0; inset-inline: 0;
     display: grid; grid-template-columns: 1fr 1fr 1.4fr;
@@ -8167,6 +8194,41 @@ html, body {
     display: inline-flex; align-items: center; min-height: 44px; min-width: 44px;
   }
 }
+
+/* ===============================================================
+   DIBS AI SECTIONS (HOMEPAGE & TRACY LOCATION)
+   =============================================================== */
+.dibs-ai {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8fc 100%);
+  border-top: 1px solid var(--line-soft);
+}
+.dibs-ai__split,
+.dibs-tracy {
+  align-items: center;
+}
+.dibs-ai__actions {
+  margin-top: var(--s-7);
+}
+.dibs-tracy__shell {
+  margin-top: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+  padding-top: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+  border-top: 1px solid var(--line-soft);
+}
+.dibs-ai__media img,
+.dibs-tracy__media img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-md);
+  border: 1px solid rgba(23, 103, 157, 0.12);
+  transition: transform var(--t-slow) var(--e-soft), box-shadow var(--t-slow) var(--e-soft);
+}
+.dibs-ai__media:hover img,
+.dibs-tracy__media:hover img {
+  transform: translateY(-4px);
+  box-shadow: var(--sh-lg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
