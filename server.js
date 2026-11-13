@@ -28,6 +28,7 @@ const fallbackLegacyRules = [
   [ /^\/blog\/invisalign\-vs\-braces\-choosing\-the\-right\-option\-for\-your\-smile(?:\.(html|php))?\/?$/, '/blog/braces-vs-invisalign.html' ],
   [ /^\/surgical\-orthodontist(?:\.(html|php))?\/?$/, '/surgical-orthodontics.html' ],
   [ /^\/blog\/can\-tmj\-dysfuntion\-cause\-ear\-pain(?:\.(html|php))?\/?$/, '/blog/can-tmj-dysfunction-cause-ear-pain.html' ],
+  [ /^\/blog\/foods\-to\-avoid\-with\-braces\-what\-to\-skip\-what\-to\-eat\-and\-braces\-friendly\-choices(?:\.(html|php))?\/?$/, '/blog/foods-to-avoid-with-braces.html' ],
   [ /^\/index\.php$/, '/' ],
   [ /^\/blogs\.php$/, '/blog.html' ],
   [ /^\/(blog1|blog2)\.php$/, '/' ],

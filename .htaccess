@@ -32,6 +32,7 @@ Options -MultiViews
   RewriteRule ^blog/invisalign\-vs\-braces\-choosing\-the\-right\-option\-for\-your\-smile(?:\.(html|php))?/?$ /blog/braces-vs-invisalign.html [R=301,L,NE]
   RewriteRule ^surgical\-orthodontist(?:\.(html|php))?/?$ /surgical-orthodontics.html [R=301,L,NE]
   RewriteRule ^blog/can\-tmj\-dysfuntion\-cause\-ear\-pain(?:\.(html|php))?/?$ /blog/can-tmj-dysfunction-cause-ear-pain.html [R=301,L,NE]
+  RewriteRule ^blog/foods\-to\-avoid\-with\-braces\-what\-to\-skip\-what\-to\-eat\-and\-braces\-friendly\-choices(?:\.(html|php))?/?$ /blog/foods-to-avoid-with-braces.html [R=301,L,NE]
   # Redirect only extensionless paths that resolve to a real HTML document.
   RewriteCond %{DOCUMENT_ROOT}/$1.html -f
   RewriteRule ^([^.?]+?)/?$ /$1.html [R=301,L,NE]
