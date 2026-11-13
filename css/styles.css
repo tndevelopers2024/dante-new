@@ -8196,7 +8196,7 @@ html, body {
 }
 
 /* ===============================================================
-   DIBS AI SECTIONS (HOMEPAGE, TRACY & DUBLIN LOCATIONS)
+   DIBS AI SECTIONS (HOMEPAGE, TRACY, DUBLIN & BRACES SERVICE PAGE)
    =============================================================== */
 .dibs-ai {
   background: linear-gradient(180deg, #ffffff 0%, #f4f8fc 100%);
@@ -8231,8 +8231,67 @@ html, body {
   transform: translateY(-4px);
   box-shadow: var(--sh-lg);
 }
+.dibs-steps {
+  display: grid;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+  padding: 0;
+  list-style: none;
+}
+.dibs-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(23, 103, 157, 0.12);
+  border-radius: var(--r-md);
+  box-shadow: 0 1px 3px rgba(20, 35, 46, 0.04);
+  transition: transform var(--t-fast) var(--e-out), background-color var(--t-fast) var(--e-out), box-shadow var(--t-fast) var(--e-out), border-color var(--t-fast) var(--e-out);
+}
+.dibs-step:hover {
+  background: #ffffff;
+  transform: translateX(4px);
+  box-shadow: var(--sh-sm);
+  border-color: rgba(23, 103, 157, 0.25);
+}
+.dibs-step__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--brand-700);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 1px;
+}
+.dibs-step__body {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+.dibs-step__title {
+  font-weight: 700;
+  color: var(--ink);
+  margin-right: 0.25rem;
+}
+.dibs-step__text {
+  color: var(--ink-2);
+}
+.dibs-steps + .dibs-ai__actions {
+  margin-top: var(--s-5);
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .dibs-step { transition: none; }
+  .dibs-step:hover { transform: none; }
 }
 
