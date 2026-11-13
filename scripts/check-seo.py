@@ -11,7 +11,7 @@ class Parse(HTMLParser):
   if 'id'in a:self.ids.append(a['id'])
 for p in list(R.glob('*.html'))+list((R/'blog').glob('*.html')):
  rel=p.relative_to(R).as_posix();s=p.read_text();d=Parse();d.feed(s)
- if '/'+rel in redirects and rel!='index.html':continue
+ if ('/'+rel in redirects and rel!='index.html') or rel.startswith('google'):continue
  for tag,a in d.tags:
   if tag=='img':
    for attr in ['width','height','alt']:
