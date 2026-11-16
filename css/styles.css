@@ -8136,26 +8136,80 @@ html, body {
 .hero__calls a { display: inline-flex; align-items: center; min-height: 44px; font-size: .875rem; font-weight: 600; text-decoration: underline; text-underline-offset: .2em; }
 .hero__promo {
   margin-top: .75rem;
-  max-width: 380px;
+  max-width: 440px;
   width: 100%;
 }
 .hero__promo a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .5rem .875rem .5rem .75rem;
+  background: #fbf8f3;
+  background: linear-gradient(180deg, #fdfaf6 0%, #f8f4ef 100%);
   border-radius: var(--r-md, 12px);
   overflow: hidden;
   border: 1px solid rgba(20, 35, 46, .08);
   box-shadow: 0 4px 14px rgba(20, 35, 46, .08);
-  transition: transform var(--t-fast) var(--e-out), box-shadow var(--t-fast) var(--e-out);
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--t-fast) var(--e-out), box-shadow var(--t-fast) var(--e-out), border-color var(--t-fast) var(--e-out);
 }
 .hero__promo a:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(20, 35, 46, .14);
+  border-color: rgba(23, 103, 157, .25);
 }
-.hero__promo img {
+.hero__promo-media {
+  flex-shrink: 0;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero__promo-media picture,
+.hero__promo-media img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: var(--r-md, 12px);
+  max-height: 64px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(20, 35, 46, .12));
+}
+.hero__promo-content {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  min-width: 0;
+}
+.hero__promo-title {
+  font-family: var(--font-body);
+  font-size: .6875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink, #14232e);
+  margin: 0;
+}
+.hero__promo-desc {
+  font-family: var(--font-body);
+  font-size: .59375rem;
+  line-height: 1.3;
+  color: var(--ink-2, #3d5462);
+  margin: 0;
+}
+.hero__promo-cta {
+  font-family: var(--font-body);
+  font-size: .625rem;
+  font-weight: 600;
+  color: var(--brand-700, #17679d);
+  display: inline-flex;
+  align-items: center;
+  gap: .2rem;
+  margin-top: .05rem;
+  text-decoration: none;
+}
+.hero__promo a:hover .hero__promo-cta {
+  color: var(--brand-600, #1a80c0);
+  text-decoration: none;
 }
 .mobile-actions { display: none; }
 .audit-related { padding: 1.5rem; margin-block: 2rem; border: 1px solid var(--line); border-radius: var(--r-md); }
@@ -8176,6 +8230,9 @@ html, body {
   .hero__promo {
     margin-top: 1.25rem;
     max-width: min(350px, 100%);
+  }
+  .hero__promo a {
+    background: rgba(240, 246, 252, .92);
   }
   .mobile-actions {
     position: fixed; z-index: 350; bottom: 0; inset-inline: 0;
