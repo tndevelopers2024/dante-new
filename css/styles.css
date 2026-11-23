@@ -4324,7 +4324,7 @@ html:not(.js) .carousel__controls { display: none; }
   margin-right: .7rem;
   flex: none;
   border-radius: 50%;
-  background: var(--brand-50) url("../assets/team/dr-dante-gonzales.webp") center 15% / cover;
+  background: var(--brand-50) url("../assets/team/new-images/dr-dante-gonzales-new.png") center 15% / cover;
   box-shadow: 0 0 0 1px var(--line), 0 2px 6px -2px rgba(20, 35, 46, .25);
 }
 .page-hero--article .page-hero__byline span:not(:first-child)::before {
